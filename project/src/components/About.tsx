@@ -54,7 +54,7 @@ const About = () => {
         <div className="bg-slate-50 rounded-lg p-8 md:p-12">
           <div className="text-center mb-8">
             <img 
-              src="https://i.ibb.co/jkr0MwBT/Screenshot-2025-07-22-at-12-44-29-AM.png" 
+              src="https://i.ibb.co/whSCS4Gm/IMG-6865.jpg" 
               alt="Shashwat Bali - Founder, Bali & Partners"
               className="w-64 h-64 rounded-full mx-auto mb-6 object-cover shadow-lg"
             />
