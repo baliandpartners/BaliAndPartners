@@ -86,6 +86,52 @@ test("deployment indexing matches the intended release mode", async ({
   );
 });
 
+for (const route of ["/insights", "/contact"]) {
+  test(`early input survives delayed scripts on ${route}`, async ({ page }) => {
+    let release!: () => void;
+    const pending = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await page.route("**/assets/Pages-*.js", async (request) => {
+      await pending;
+      await request.continue();
+    });
+    try {
+      await page.goto(route, { waitUntil: "commit" });
+      const input =
+        route === "/insights"
+          ? page.getByRole("searchbox", { name: "Search perspectives" })
+          : page.getByLabel("Your name");
+      await expect(input).toBeDisabled();
+      const typing = input.fill(
+        route === "/insights" ? "precision" : "Early visitor",
+      );
+      release();
+      await typing;
+      await expect(input).toBeEnabled();
+      if (route === "/insights") {
+        await expect(page.locator(".insight-entry")).toHaveCount(1);
+      } else {
+        await page.getByLabel("Work email").fill("early@example.test");
+        await page
+          .getByLabel("Nature of enquiry")
+          .selectOption("Content strategy");
+        await page
+          .getByLabel("A brief outline")
+          .fill("An unsent draft for the delayed-script check.");
+        await page
+          .getByRole("button", { name: "Prepare email", exact: true })
+          .click();
+        await expect(
+          page.getByRole("link", { name: "Open email draft" }),
+        ).toHaveAttribute("href", /Early%20visitor/);
+      }
+    } finally {
+      release();
+    }
+  });
+}
+
 for (const width of [320, 375, 390, 430, 768, 1024, 1440, 1920]) {
   test(`responsive layout at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });

@@ -14,6 +14,7 @@ import {
   Search,
 } from "lucide-react";
 import ContactForm from "../components/ContactForm";
+import { useHydrated } from "../hooks/useHydrated";
 import { articles, services, readingTime, type Article } from "../data/content";
 import "./pages.css";
 
@@ -459,6 +460,7 @@ function ArticleEntry({ article, index }: { article: Article; index: number }) {
 }
 
 export function InsightsPage() {
+  const hydrated = useHydrated();
   const [category, setCategory] = useState("All perspectives");
   const [query, setQuery] = useState("");
   const categories = [
@@ -525,6 +527,7 @@ export function InsightsPage() {
             <Search size={17} aria-hidden="true" />
             <span className="sr-only">Search perspectives</span>
             <input
+              disabled={!hydrated}
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               type="search"

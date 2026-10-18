@@ -60,3 +60,11 @@ The owner subsequently authorised publication to the existing main branch and Ve
 - Existing production deployment and main SHA were rechecked before publishing; the previous source remains available at `f06aa2060c374877460b9c9cba1643d719fec946`.
 
 The newly supplied portrait was visible in the chat but was not exposed as a downloadable file or attachment identifier to the code workspace. It has not been substituted with another photograph or a generated likeness. A direct downloadable copy is required to add the exact image to the homepage and About founder sections. This remaining asset update can be published after launch using the same workflow.
+
+### Live interaction refinement
+
+The initial production deployment served all 16 routes, correct metadata, fonts, images, robots.txt and real 404 responses. Hosted browser testing exposed an early-input race: a visitor could type into the prerendered search field before its lazy-loaded React code attached the input handler. The DOM retained the text, but the results did not filter. Editable search and enquiry controls now stay disabled until hydration is complete, so the first accepted input is preserved. Two regression tests delay the interior JavaScript and verify search filtering and enquiry-name preservation after loading resumes.
+
+The verification environment's Chromium certificate store does not contain its HTTPS proxy CA. Hosted browser checks therefore forward the real responses using Playwright's Node transport, the configured proxy and the system CA bundle, with TLS verification enabled. No certificate verification is disabled. This transport detail does not change the deployed site or its domain configuration.
+
+After the input fix, the production build, TypeScript and ESLint passed, and the full browser suite completed **35 passed**, 0 failed, 0 skipped.

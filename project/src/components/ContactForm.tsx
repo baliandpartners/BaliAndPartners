@@ -6,6 +6,7 @@ import {
   type FormEvent,
 } from "react";
 import "./interactive.css";
+import { useHydrated } from "../hooks/useHydrated";
 
 const contactEmail = "Shashwat@baliandpartners.in";
 const enquiryTypes = [
@@ -48,6 +49,7 @@ function validate(values: FormValues): FormErrors {
 }
 
 export default function ContactForm() {
+  const hydrated = useHydrated();
   const id = useId();
   const [values, setValues] = useState<FormValues>(emptyForm);
   const [errors, setErrors] = useState<FormErrors>({});
@@ -156,6 +158,7 @@ export default function ContactForm() {
             </label>
             <input
               id={`${id}-name`}
+              disabled={!hydrated}
               name="name"
               value={values.name}
               onChange={updateValue}
@@ -173,6 +176,7 @@ export default function ContactForm() {
             </label>
             <input
               id={`${id}-organisation`}
+              disabled={!hydrated}
               name="organisation"
               value={values.organisation}
               onChange={updateValue}
@@ -187,6 +191,7 @@ export default function ContactForm() {
           </label>
           <input
             id={`${id}-email`}
+            disabled={!hydrated}
             name="email"
             type="email"
             inputMode="email"
@@ -207,6 +212,7 @@ export default function ContactForm() {
           </label>
           <select
             id={`${id}-nature`}
+            disabled={!hydrated}
             name="nature"
             value={values.nature}
             onChange={updateValue}
@@ -229,6 +235,7 @@ export default function ContactForm() {
           </label>
           <textarea
             id={`${id}-message`}
+            disabled={!hydrated}
             name="message"
             value={values.message}
             onChange={updateValue}
@@ -260,7 +267,7 @@ export default function ContactForm() {
             Please check the highlighted fields before preparing your email.
           </p>
         )}
-        <button type="submit" className="enquiry-submit">
+        <button type="submit" className="enquiry-submit" disabled={!hydrated}>
           Prepare email <span aria-hidden="true">↗</span>
         </button>
       </form>
