@@ -1,6 +1,6 @@
 # Bali & Partners
 
-A bespoke legal content and strategy website, built in `project/` on `feature/premium-editorial-rebuild`. Production and the existing domains are unchanged.
+A bespoke legal content and strategy website, built in `project/`. The owner authorised production publication on 18 October 2026 using the existing GitHub/Vercel connection and domain configuration.
 
 ## Develop and preview
 
@@ -47,10 +47,12 @@ Tests use `/usr/bin/chromium` by default in this cloud image. Set `CHROMIUM_PATH
 - `scripts/capture-review.mjs`: saves desktop/mobile screenshots for review.
 - `vercel.json`: build settings and headers for the `project/` application directory; no domain aliases or DNS settings.
 
-## Important review boundaries
+## Publishing and future updates
 
-This is an approval build. Search indexing is disabled by default. Vercel Preview builds remain `noindex` even if a production-mode variable is inherited. No production deployment, merge or domain change is authorised.
+The Vercel production build enables search indexing. Local builds default to preview mode; use `VERCEL_ENV=production npm run build` to verify the release locally. Vercel Preview builds remain `noindex` even if a production-mode variable is inherited. Sample article pages always remain `noindex` and are excluded from the sitemap.
 
-The form prepares an email draft; a visitor must review and send it in their mail application. It does not submit to a backend, store personal data or pretend an email was sent. Editorial articles are clearly labelled samples. Supplied contact details, founder copy, legal notices and professional-conduct questions need confirmation before public release.
+The site can be changed after launch. Edit content in `src/data/content.ts`, update page copy in `src/pages/`, and add approved images to `public/`. Develop on a feature branch, build and test, review its Vercel preview, then publish an approved update to `main`. The existing Vercel Git integration builds a new production version; the domain does not need to change. Git and Vercel retain previous versions for rollback.
+
+The form prepares an email draft; a visitor must review and send it in their mail application. It does not submit to a backend, store personal data or pretend an email was sent. Editorial articles are clearly labelled samples. Public notices describe this implementation without claiming professional or regulatory certification.
 
 See [deployment and rollback](docs/DEPLOYMENT.md), [editorial maintenance](docs/CONTENT.md), [design system](docs/DESIGN.md), [release review](docs/RELEASE-REVIEW.md) and [QA evidence](docs/QA.md).

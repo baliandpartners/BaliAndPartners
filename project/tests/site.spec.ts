@@ -17,6 +17,7 @@ const routes = [
   ...services.map((s) => `/expertise/${s.slug}`),
   ...articles.map((a) => `/insights/${a.slug}`),
 ];
+const production = process.env.TEST_SITE_MODE === "production";
 
 for (const route of routes) {
   test(`render and metadata ${route}`, async ({ page, request }) => {
@@ -33,7 +34,9 @@ for (const route of routes) {
     );
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
       "content",
-      "noindex, nofollow",
+      production && !route.startsWith("/insights/")
+        ? "index, follow"
+        : "noindex, nofollow",
     );
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       "href",
@@ -64,6 +67,24 @@ for (const route of routes) {
     expect(errors).toEqual([]);
   });
 }
+
+test("deployment indexing matches the intended release mode", async ({
+  request,
+}) => {
+  const manifest = await (await request.get("/build-manifest.json")).json();
+  expect(manifest.mode).toBe(production ? "production" : "preview");
+  const robots = await (await request.get("/robots.txt")).text();
+  expect(robots).toContain(production ? "Allow: /" : "Disallow: /");
+  if (production)
+    expect(robots).toContain("https://www.baliandpartners.in/sitemap.xml");
+  const sitemap = await (await request.get("/sitemap.xml")).text();
+  expect(sitemap).toContain("https://www.baliandpartners.in/about");
+  for (const article of articles) expect(sitemap).not.toContain(article.slug);
+  const response = await request.get("/");
+  expect(response.headers()["x-robots-tag"]).toBe(
+    production ? undefined : "noindex, nofollow",
+  );
+});
 
 for (const width of [320, 375, 390, 430, 768, 1024, 1440, 1920]) {
   test(`responsive layout at ${width}px`, async ({ page }) => {

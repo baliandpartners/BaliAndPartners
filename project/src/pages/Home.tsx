@@ -283,8 +283,8 @@ export default function Home() {
             ))}
           </div>
           <p className="editorial-disclosure">
-            A preview of our editorial direction. These sample essays are not
-            published legal analysis.
+            Editorial samples on clear writing and professional communication.
+            These essays are not legal analysis or advice.
           </p>
         </div>
       </section>

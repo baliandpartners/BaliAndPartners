@@ -48,3 +48,15 @@ Measured with Lighthouse 13.5.0 against the compressed local static preview, usi
 | Cumulative layout shift | 0 | 0 |
 
 The SEO score reflects intentional preview indexing restrictions (`noindex`, preview response headers and robots.txt). It is not a production SEO score. The simulated mobile LCP remains above the 2.5-second target; hosted and field measurements may differ. JSON and HTML reports are retained in `/workspace/.cloud-setup/BaliAndPartners/rebuild-qa/lighthouse-{mobile,desktop}-release.report.*`.
+
+## Authorised production release — 18 October 2026
+
+The owner subsequently authorised publication to the existing main branch and Vercel project. The production build now enables indexing automatically when `VERCEL_ENV=production`; `VERCEL_ENV=preview` still blocks indexing even when `VITE_SITE_MODE=production` is supplied. Public privacy/terms copy describes the actual implementation and no longer refers to a development preview. Editorial essays remain labelled samples and unindexed.
+
+- Preview-mode build and browser suite: **33 passed**, 0 failed, 0 skipped.
+- Production-mode build and browser suite: **33 passed**, 0 failed, 0 skipped.
+- TypeScript, ESLint and whitespace checks: passed.
+- Added deployment checks for generated build mode, robots policy, sitemap exclusions and response indexing headers.
+- Existing production deployment and main SHA were rechecked before publishing; the previous source remains available at `f06aa2060c374877460b9c9cba1643d719fec946`.
+
+The newly supplied portrait was visible in the chat but was not exposed as a downloadable file or attachment identifier to the code workspace. It has not been substituted with another photograph or a generated likeness. A direct downloadable copy is required to add the exact image to the homepage and About founder sections. This remaining asset update can be published after launch using the same workflow.

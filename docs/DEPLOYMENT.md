@@ -2,9 +2,9 @@
 
 ## Current boundary
 
-The work is isolated on `feature/premium-editorial-rebuild`, based on original commit `f06aa2060c374877460b9c9cba1643d719fec946`. The live project is identified by the owner as Vercel `bali-and-partners`, connected to `baliandpartners/BaliAndPartners`. Vercel account settings, production branch and root-directory settings could not be independently read in this environment. Do not modify those settings based on assumptions.
+The rebuild was developed on `feature/premium-editorial-rebuild`, based on original commit `f06aa2060c374877460b9c9cba1643d719fec946`. The owner explicitly authorised publication to `main` and Vercel production on 18 October 2026. The live project is Vercel `bali-and-partners`, connected to `baliandpartners/BaliAndPartners`. The public GitHub deployment records verify the existing production and preview integrations; account-level settings have not been changed.
 
-No domain, DNS, certificate, production alias or production branch has been changed. The existing root `index.html` and `assets/` are preserved; the replacement lives in the existing `project/` application directory.
+Domain, DNS, certificate and project settings are preserved. The existing root `index.html` and `assets/` are preserved; the replacement lives in the existing `project/` application directory. Publication updates `main` through the existing Git integration.
 
 ## Review build
 
@@ -16,15 +16,15 @@ The installed filesystem and local server are separate from a hosted preview. A 
 
 1. Confirm in Vercel that the connected repository is `baliandpartners/BaliAndPartners`, the project is `bali-and-partners`, and the production branch is not this feature branch.
 2. The application directory is `project/`. If the existing project already uses that root, its branch preview should use `project/vercel.json`: `npm run build`, output `dist`, static Vite framework.
-3. Push only the feature branch. Follow its Vercel deployment check to the **Preview** deployment. Do not promote, alias to the live domain, merge, or run a production deploy.
+3. For review, push the feature branch and follow its Vercel deployment check to the **Preview** deployment. When the owner authorises production publication, update `main` without a force push; the existing integration creates the production deployment. Do not change domain aliases or project settings.
 4. If the existing root setting differs, do not change the live project's shared root setting casually. Use a preview-only deployment with the application directory selected explicitly, or agree the configuration adjustment with the owner.
 5. Verify the actual preview URL: root, a deep route, refresh, static fonts/logo, unknown-route 404, navigation, enquiry composer and response headers. An unverified deployment URL is not approval evidence.
 
-Authenticated Vercel CLI access can also create a preview using the existing project, after verifying the link and target. Never pass `--prod`. Never add domain aliases. No credentials belong in Git, command output or chat; supply access through the environment's secure configuration.
+The verified Git integration is sufficient for production publication; a separate Vercel CLI login is unnecessary. No credentials belong in Git, command output or chat; supply any future access requirements through secure environment configuration.
 
 ## Search and environment variables
 
-No application secrets are required for the implemented site. `VITE_SITE_MODE` defaults to review mode; use `production` only after explicit launch permission and release review. `VERCEL_ENV=preview` always forces preview mode. The HTML and the local preview server send noindex for preview builds; robots.txt disallows crawling. Sample article pages retain noindex in production mode and are excluded from the sitemap until replaced by approved editorial work.
+No application secrets are required for the implemented site. Following launch approval, `VERCEL_ENV=production` enables indexing. Local builds default to review mode; `VITE_SITE_MODE=production` enables an explicit local release check. `VERCEL_ENV=preview` always forces preview mode. The HTML and the local preview server send noindex for preview builds; robots.txt disallows crawling. Sample article pages retain noindex in production mode and are excluded from the sitemap until replaced by approved editorial work.
 
 Canonical URLs target the user-supplied `https://www.baliandpartners.in/`. This does not change DNS or assert independent ownership verification. Confirm the canonical host before launch. The alternate spelling `baliandpartner.in` was inaccessible and has not been treated as the same domain.
 
@@ -40,7 +40,7 @@ There is deliberately no inactive API route or fake success state. `ContactForm.
 
 ## Production approval and rollback
 
-Obtain explicit approval before merge or production deployment. Confirm public contact details, founder copy, sample-content replacement policy, privacy/terms, professional-conduct review, root directory and canonical host. Run the release build and browser suite again after any approved content/integration change.
+The owner has authorised this launch. Future changes can follow the same feature-branch, preview, test and approved-main workflow. Run relevant checks after content or integration changes. Keep the public notices aligned with the actual form, hosting and data processing; this implementation does not assert that an independent legal review has occurred.
 
 Keep the existing Vercel production deployment available. A future approved release can be rolled back through Vercel's deployment history to that known deployment; the original source is preserved at the base commit above. Domain/DNS records should not need to change.
 

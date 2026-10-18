@@ -497,9 +497,8 @@ export function InsightsPage() {
             i
           </span>
           <p>
-            This review edition contains editorial samples created to
-            demonstrate the publication experience. They are not legal updates
-            or advice.
+            These editorial samples explore clear writing and professional
+            communication. They are not legal updates or advice.
           </p>
         </div>
         <h2 id="perspectives-title" className="sr-only">
@@ -883,17 +882,15 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
         <h1 className="display">
           {privacy ? "Privacy notice." : "Website terms."}
         </h1>
-        <p className="legal-draft-label">
-          Review draft · Prepared for this development preview
-        </p>
+        <p className="legal-draft-label">Last updated · 18 October 2026</p>
       </section>
       <div className="container legal-layout">
         <aside>
           <p className="eyebrow">A clear understanding</p>
           <p>
-            These notices describe this review website. They require
-            confirmation of the business’s practices and human legal review
-            before public release.
+            {privacy
+              ? "How this website handles browsing information and enquiries, and how to contact us about your information."
+              : "The scope of the information on this website and the terms for using it."}
           </p>
           <a className="text-link" href="mailto:Shashwat@baliandpartners.in">
             Contact us <ArrowUpRight size={15} aria-hidden="true" />
@@ -912,12 +909,6 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
                     Shashwat@baliandpartners.in
                   </a>
                   .
-                </p>
-                <p>
-                  This is a development review version. The identity and contact
-                  details of the responsible business, applicable
-                  data-protection obligations and operational retention
-                  practices must be confirmed before public release.
                 </p>
               </section>
               <section>
@@ -947,26 +938,28 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
                   separately.
                 </p>
                 <p>
-                  A retention period for enquiry correspondence has not been
-                  specified in this development preview. Retention, access and
-                  deletion procedures require confirmation before this notice is
-                  finalised.
+                  For questions about access to, retention of or deletion of
+                  correspondence you have sent us, please contact the email
+                  address above. This website does not maintain an enquiry
+                  database.
                 </p>
               </section>
               <section>
                 <h2>4. Browsing and technical services</h2>
                 <p>
-                  This build does not include advertising trackers or
+                  This website does not include advertising trackers or
                   third-party analytics. Its fonts and visual assets are served
                   with the website. No optional marketing cookies are set by the
                   application.
                 </p>
                 <p>
-                  The hosting provider may process technical request
-                  information, such as an IP address and browser details, to
-                  deliver and operate the site. The deployed hosting
-                  configuration and its retention settings must be checked
-                  before release.
+                  The site is hosted by Vercel, which may process technical
+                  request information, such as an IP address and browser
+                  details, to deliver, secure and operate the site. See{" "}
+                  <a href="https://vercel.com/legal/privacy-policy">
+                    Vercel’s privacy policy
+                  </a>{" "}
+                  for information about its processing practices.
                 </p>
               </section>
               <section>
@@ -986,10 +979,10 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
               <section>
                 <h2>6. Future changes</h2>
                 <p>
-                  A direct form service, analytics tool, newsletter or
-                  additional data-processing feature would require this notice
-                  to be reviewed before it is enabled. No claim of legal
-                  compliance or certification is made by this draft.
+                  We may update this notice as the website and its services
+                  change. The date above identifies the latest revision. Any
+                  direct form service, analytics tool or newsletter added in
+                  future will be described here before it is enabled.
                 </p>
               </section>
             </>
@@ -1000,9 +993,8 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
                 <p>
                   This website provides information about Bali &amp; Partners’
                   legal research, content, editorial and professional
-                  communications services. It is not an offer of litigation
-                  representation and does not describe the business as a law
-                  firm, registered partnership, LLP or company.
+                  communications services. The website does not offer litigation
+                  representation.
                 </p>
               </section>
               <section>
@@ -1014,10 +1006,9 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
                   circumstances.
                 </p>
                 <p>
-                  The perspectives in this review edition are expressly marked
-                  as editorial samples. They demonstrate the editorial
-                  experience and are not published legal updates, reported cases
-                  or advice.
+                  The perspectives marked as editorial samples demonstrate the
+                  editorial experience and are not published legal updates,
+                  reported cases or advice.
                 </p>
               </section>
               <section>
@@ -1044,8 +1035,8 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
                   messages.
                 </p>
                 <p>
-                  The website’s content and identity are provided for viewing
-                  and review. Rights in third-party materials remain with their
+                  The website’s content and identity are provided for your
+                  information. Rights in third-party materials remain with their
                   respective owners. Contact us before reusing business content
                   or brand assets beyond uses permitted by law.
                 </p>
@@ -1053,21 +1044,19 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
               <section>
                 <h2>5. Availability and external services</h2>
                 <p>
-                  Content may be revised and features may change. The
-                  development preview may not always be available. Email,
-                  telephone and external services operate independently of this
-                  website and are subject to their own terms and technical
-                  requirements.
+                  Content may be revised and features may change. Access to the
+                  website may occasionally be interrupted. Email, telephone and
+                  external services operate independently of this website and
+                  are subject to their own terms and technical requirements.
                 </p>
               </section>
               <section>
-                <h2>6. Review before release</h2>
+                <h2>6. Changes and questions</h2>
                 <p>
-                  These draft terms require human review for the business’s
-                  legal identity, professional status, applicable
-                  professional-conduct rules and the intended services. They do
-                  not assert compliance with any professional or regulatory
-                  framework.
+                  We may revise these terms when the website or its services
+                  change. The date above identifies the latest revision. These
+                  website terms do not replace the terms separately agreed for a
+                  professional assignment.
                 </p>
                 <p>
                   For questions about the website, write to{" "}
