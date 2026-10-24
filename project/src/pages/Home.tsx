@@ -1,6 +1,8 @@
+import { useHydrated } from "../hooks/useHydrated";
 import { useState } from "react";
 import { ArrowDown, ArrowRight, ArrowUpRight, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
+import FounderVisual from "../components/FounderVisual";
 import EditorialArt from "../components/EditorialArt";
 import EditorialSpecimen from "../components/EditorialSpecimen";
 import { ClosingNote } from "../components/SiteLayout";
@@ -12,7 +14,7 @@ const process = [
   },
   {
     name: "Research",
-    copy: "Find the source. Understand the substance. Test the premise.",
+    copy: "Trace the sources. Check the authorities. Test the premise.",
   },
   {
     name: "Develop",
@@ -20,14 +22,15 @@ const process = [
   },
   {
     name: "Review",
-    copy: "Question every claim. Refine the language. Resolve the detail.",
+    copy: "Check the claims. Incorporate your comments. Resolve the detail.",
   },
   {
     name: "Deliver",
-    copy: "A considered piece of work, ready for its intended reader.",
+    copy: "Your approved work, prepared in the agreed format for its intended reader.",
   },
 ];
 export default function Home() {
+  const hydrated = useHydrated();
   const [activeService, setActiveService] = useState(0);
   const [activeStep, setActiveStep] = useState(0);
   return (
@@ -51,9 +54,8 @@ export default function Home() {
                 <em>Editorial precision.</em>
               </h1>
               <p>
-                We turn complex legal thinking into
-                <br className="desktop-break" /> clear, considered
-                communication.
+                Research-led legal writing, editorial and knowledge support for
+                law firms, chambers and professional teams.
               </p>
               <div className="hero-actions">
                 <Link to="/expertise" className="button button-dark">
@@ -101,9 +103,10 @@ export default function Home() {
                 source, and a clear sense of who needs to understand it.
               </p>
               <p>
-                At Bali & Partners, we bring legal research and editorial
-                thinking together. To give complex ideas a clear structure. And
-                professional voices the substance to be heard.
+                Bali & Partners provides dedicated research and editorial
+                capacity for professionals whose expertise deserves time and
+                care on the page. We develop source material into structured
+                drafts, with clear review points and your final approval.
               </p>
             </div>
             <Link className="text-link" to="/about">
@@ -217,6 +220,7 @@ export default function Home() {
               <button
                 key={step.name}
                 type="button"
+                disabled={!hydrated}
                 className={`method-step${activeStep === i ? " is-active" : ""}`}
                 aria-expanded={activeStep === i}
                 aria-controls={`method-description-${i}`}
@@ -273,7 +277,7 @@ export default function Home() {
                 </div>
                 <div className="article-meta">
                   <span>{article.category}</span>
-                  <span>Editorial sample</span>
+                  <span>{article.label}</span>
                 </div>
                 <h3>{article.title}</h3>
                 <span className="article-read">
@@ -283,30 +287,32 @@ export default function Home() {
             ))}
           </div>
           <p className="editorial-disclosure">
-            Editorial samples on clear writing and professional communication.
-            These essays are not legal analysis or advice.
+            Entries marked “Editorial sample” demonstrate writing and
+            communication practice. They are not legal analysis or advice.
           </p>
         </div>
       </section>
       <section className="founder-home section-space" id="about">
         <div className="container founder-grid">
-          <div className="founder-type-art" aria-hidden="true">
-            <span className="founder-initials">
-              SB<span>.</span>
-            </span>
-            <div className="founder-art-footer">
-              <span>
-                THE PERSON
-                <br />
-                BEHIND THE PERSPECTIVE
+          <FounderVisual>
+            <div className="founder-type-art" aria-hidden="true">
+              <span className="founder-initials">
+                SB<span>.</span>
               </span>
-              <span>
-                NEW DELHI
-                <br />
-                INDIA
-              </span>
+              <div className="founder-art-footer">
+                <span>
+                  THE PERSON
+                  <br />
+                  BEHIND THE PERSPECTIVE
+                </span>
+                <span>
+                  NEW DELHI
+                  <br />
+                  INDIA
+                </span>
+              </div>
             </div>
-          </div>
+          </FounderVisual>
           <div className="founder-copy">
             <p className="eyebrow">06 / A personal perspective</p>
             <h2 className="section-title">

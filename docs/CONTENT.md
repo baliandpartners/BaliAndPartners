@@ -9,3 +9,11 @@ To add approved material, give it a unique slug and descriptive title, accurate 
 No CMS account or subscription is needed. The typed content module is the editorial source. A future MDX/CMS migration can reuse the page layouts without changing the public route structure, but should be introduced only when the publishing workflow warrants it.
 
 Existing homepage anchors `#hero`, `#services`, `#about` and `#contact` continue to resolve. Policy links now lead to real pages. The original unverified testimonials, institutional claims and registration statements have been removed from the replacement.
+
+## Approved legal publications
+
+`Article` is now a discriminated union: `kind: "sample"` preserves the existing labelled demonstration essays; `kind: "publication"` requires explicit approval, author name, ISO publication date, jurisdiction, qualifications, disclaimer, verified sources and an explicit indexing decision. A substantive review date, modification date (updatedAt) and author role are optional; a review may precede publication. Each source has a unique ID, title, citation and public HTTPS URL. Sections may reference those IDs; optional relatedSlugs select relevant related reading.
+
+The build validates slug/anchor uniqueness, source links and references, dates, attribution and approval before generating pages. Do not add a record until the owner has supplied approved text and confirmed publishing rights. Tests use a clearly isolated fixture; it is never part of the public content array. The renderer presents attribution, dates, jurisdiction, qualifications and linked authorities. Approved, indexable publications gain Article structured data and production indexing; samples and previews remain noindex. A build cannot verify the legal accuracy of a citation or the authenticity of owner approval: substantive review remains required.
+
+Founder portraits are configured centrally in `src/components/FounderVisual.tsx` only after an approved local image and its dimensions are available. Both placements use the existing typography until then. The owner register tracks outstanding inputs.

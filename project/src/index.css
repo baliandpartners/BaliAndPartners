@@ -1830,3 +1830,19 @@ select:focus-visible {
   font-family: var(--serif);
   font-size: 32px;
 }
+
+.founder-portrait {
+  margin: 0;
+  align-self: start;
+}
+.founder-portrait img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+.founder-portrait figcaption {
+  font-size: 11px;
+  margin-top: 14px;
+  line-height: 1.5;
+}

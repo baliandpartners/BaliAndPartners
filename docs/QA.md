@@ -68,3 +68,8 @@ The initial production deployment served all 16 routes, correct metadata, fonts,
 The verification environment's Chromium certificate store does not contain its HTTPS proxy CA. Hosted browser checks therefore forward the real responses using Playwright's Node transport, the configured proxy and the system CA bundle, with TLS verification enabled. No certificate verification is disabled. This transport detail does not change the deployed site or its domain configuration.
 
 After the input fix, the production build, TypeScript and ESLint passed, and the full browser suite completed **35 passed**, 0 failed, 0 skipped.
+
+
+## Follow-up audit — 24 October 2026
+
+Current evidence and release limitations are recorded in [AUDIT-2026-10.md](AUDIT-2026-10.md) and [FUNCTIONALITY-REGISTER.md](FUNCTIONALITY-REGISTER.md). The final local production build passes 45 browser tests and separate accessibility checks. The protected Vercel preview still needs authenticated acceptance before production; historical release results above do not establish that new deployment is verified.

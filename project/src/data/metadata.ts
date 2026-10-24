@@ -1,4 +1,4 @@
-import { articles, services } from "./content";
+import { articles, services, isIndexableArticle } from "./content";
 
 declare const __SITE_IS_PRODUCTION__: boolean;
 
@@ -39,7 +39,7 @@ const pages: Record<string, { title: string; description: string }> = {
       "Editorial perspectives on legal writing, thought leadership and creating useful knowledge for professional audiences.",
   },
   "/about": {
-    title: "About the practice — Bali & Partners",
+    title: "About Bali & Partners",
     description:
       "Meet the thinking behind Bali & Partners, an independent legal content and strategy practice built around clarity, care and editorial judgement.",
   },
@@ -125,13 +125,28 @@ export function metadataForPath(pathname: string): PageMetadata {
       provider: { "@id": `${SITE_URL}/#organization` },
     });
 
+  if (article?.kind === "publication" && article.approved) {
+    structuredData.push({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: article.title,
+      description: article.description,
+      mainEntityOfPage: canonical,
+      author: { "@type": "Person", name: article.author.name },
+      datePublished: article.publishedAt,
+      ...(article.updatedAt ? { dateModified: article.updatedAt } : {}),
+      publisher: { "@id": `${SITE_URL}/#organization` },
+      citation: article.sources.map((source) => source.url),
+    });
+  }
+
   return {
     path,
     title,
     description,
-    canonical,
+    canonical: known ? canonical : "",
     robots:
-      isProductionSite && known && !article
+      isProductionSite && known && (!article || isIndexableArticle(article))
         ? "index, follow"
         : "noindex, nofollow",
     type: article ? "article" : "website",
@@ -155,7 +170,9 @@ export function renderMetadata(metadata: PageMetadata) {
     `<title>${escapeHtml(metadata.title)}</title>`,
     `<meta name="description" content="${escapeHtml(metadata.description)}" />`,
     `<meta name="robots" content="${metadata.robots}" />`,
-    `<link rel="canonical" href="${escapeHtml(metadata.canonical)}" />`,
+    ...(metadata.canonical
+      ? [`<link rel="canonical" href="${escapeHtml(metadata.canonical)}" />`]
+      : []),
     `<meta property="og:site_name" content="Bali &amp; Partners" />`,
     `<meta property="og:locale" content="en_IN" />`,
     `<meta property="og:type" content="${metadata.type}" />`,
@@ -163,6 +180,8 @@ export function renderMetadata(metadata: PageMetadata) {
     `<meta property="og:description" content="${escapeHtml(metadata.description)}" />`,
     `<meta property="og:url" content="${escapeHtml(metadata.canonical)}" />`,
     `<meta property="og:image" content="${escapeHtml(metadata.image)}" />`,
+    `<meta property="og:image:width" content="1920" />`,
+    `<meta property="og:image:height" content="1080" />`,
     `<meta property="og:image:alt" content="Bali &amp; Partners" />`,
     `<meta name="twitter:card" content="summary_large_image" />`,
     `<meta name="twitter:title" content="${escapeHtml(metadata.title)}" />`,
@@ -178,6 +197,8 @@ export function applyPageMetadata(path: string) {
   if (typeof document === "undefined") return;
   const metadata = metadataForPath(path);
   document.title = metadata.title;
+  if (!metadata.canonical)
+    document.querySelector('link[rel="canonical"]')?.remove();
   const template = document.createElement("template");
   template.innerHTML = renderMetadata(metadata);
   for (const element of Array.from(template.content.children)) {

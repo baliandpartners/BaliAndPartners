@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import {
   ArrowDown,
   ArrowLeft,
@@ -13,6 +13,7 @@ import {
   Plus,
   Search,
 } from "lucide-react";
+import FounderVisual from "../components/FounderVisual";
 import ContactForm from "../components/ContactForm";
 import { useHydrated } from "../hooks/useHydrated";
 import { articles, services, readingTime, type Article } from "../data/content";
@@ -32,7 +33,7 @@ const process = [
   {
     title: "Research",
     description: "Establish the substance.",
-    text: "We organise relevant materials around the agreed question, making the foundation of the piece and any outstanding issues visible.",
+    text: "We examine relevant primary authorities and supporting material around the agreed question, keeping citations, qualifications and outstanding issues visible.",
     details: [
       "Source review and research direction",
       "Key distinctions and qualifications",
@@ -62,7 +63,7 @@ const process = [
   {
     title: "Deliver",
     description: "Prepare for its purpose.",
-    text: "The approved work is prepared for the agreed format. Where the engagement continues, it becomes part of a coherent editorial plan.",
+    text: "After client comments and the agreed revisions, the approved work is prepared for its intended format. Authorship, intellectual-property rights and permitted reuse follow the assignment agreement.",
     details: [
       "Final editorial preparation",
       "Agreed format and handover",
@@ -257,6 +258,23 @@ export function ServicePage() {
           ))}
         </div>
       </section>
+      <section className="container service-commissioning section-space">
+        <div>
+          <p className="eyebrow">A useful starting point</p>
+          <h2 className="section-title">
+            An assignment,
+            <br />
+            <em>clearly defined.</em>
+          </h2>
+          <p className="body-copy">{service.firstAssignment}</p>
+        </div>
+        <div className="commissioning-details">
+          <h3>How the work proceeds</h3>
+          <p>{service.workflow}</p>
+          <h3>Your role in the review</h3>
+          <p>{service.clientResponsibility}</p>
+        </div>
+      </section>
       <PageCta title={service.question} />
       <div className="container next-capability">
         <span className="eyebrow">Next capability</span>
@@ -270,6 +288,7 @@ export function ServicePage() {
 }
 
 export function ApproachPage() {
+  const hydrated = useHydrated();
   const [active, setActive] = useState(0);
   return (
     <>
@@ -303,6 +322,7 @@ export function ApproachPage() {
             <div className="method-steps" aria-label="Explore our process">
               {process.map((step, index) => (
                 <button
+                  disabled={!hydrated}
                   key={step.title}
                   type="button"
                   aria-pressed={active === index}
@@ -390,6 +410,14 @@ export function ApproachPage() {
               "The author or commissioning organisation retains final approval. Subject-matter review and any required professional or legal approvals should be agreed as part of the engagement.",
             ],
             [
+              "How are confidentiality and ownership handled?",
+              "Confidentiality, access to source material, authorship, intellectual-property rights and permitted reuse should be settled in the assignment agreement before sensitive material is shared. Initial enquiries should contain only a general outline.",
+            ],
+            [
+              "What happens after the first draft?",
+              "The commissioning team provides consolidated comments and any required subject-matter review. Revisions, review responsibilities and the final approval process are agreed in the scope; they are not an unlimited revision commitment.",
+            ],
+            [
               "Do you provide legal representation?",
               "This website describes legal research, content, editorial and communications services. It does not offer litigation representation or personalised legal advice.",
             ],
@@ -461,8 +489,17 @@ function ArticleEntry({ article, index }: { article: Article; index: number }) {
 
 export function InsightsPage() {
   const hydrated = useHydrated();
-  const [category, setCategory] = useState("All perspectives");
-  const [query, setQuery] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const category = searchParams.get("category") || "All perspectives";
+  const query = searchParams.get("q") || "";
+  const updateFilter = (key: string, value: string) => {
+    // Navigation updates the URL before React commits the next render. Read it
+    // here so a rapid second input preserves the first filter change.
+    const next = new URLSearchParams(window.location.search);
+    if (value && value !== "All perspectives") next.set(key, value);
+    else next.delete(key);
+    setSearchParams(next, { replace: true });
+  };
   const categories = [
     "All perspectives",
     ...new Set(articles.map((article) => article.category)),
@@ -499,8 +536,9 @@ export function InsightsPage() {
             i
           </span>
           <p>
-            These editorial samples explore clear writing and professional
-            communication. They are not legal updates or advice.
+            Entries marked “Editorial sample” demonstrate writing and
+            communication practice. Any approved legal publications identify
+            their author, date, scope and sources separately.
           </p>
         </div>
         <h2 id="perspectives-title" className="sr-only">
@@ -514,9 +552,10 @@ export function InsightsPage() {
             {categories.map((item) => (
               <button
                 key={item}
+                disabled={!hydrated}
                 type="button"
                 className={category === item ? "is-active" : ""}
-                onClick={() => setCategory(item)}
+                onClick={() => updateFilter("category", item)}
                 aria-pressed={category === item}
               >
                 {item}
@@ -529,7 +568,7 @@ export function InsightsPage() {
             <input
               disabled={!hydrated}
               value={query}
-              onChange={(event) => setQuery(event.target.value)}
+              onChange={(event) => updateFilter("q", event.target.value)}
               type="search"
               placeholder="Search perspectives"
             />
@@ -555,8 +594,7 @@ export function InsightsPage() {
                 className="text-link"
                 type="button"
                 onClick={() => {
-                  setCategory("All perspectives");
-                  setQuery("");
+                  setSearchParams({}, { replace: true });
                 }}
               >
                 View all perspectives{" "}
@@ -572,13 +610,17 @@ export function InsightsPage() {
 }
 
 export function ArticlePage() {
+  const hydrated = useHydrated();
   const { slug } = useParams();
   const article = articles.find((item) => item.slug === slug);
   const [copyStatus, setCopyStatus] = useState("");
+  const [copyFallback, setCopyFallback] = useState(false);
+  const copyInput = useRef<HTMLInputElement>(null);
   const [progress, setProgress] = useState(0);
   const bodyRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     setCopyStatus("");
+    setCopyFallback(false);
     let frame = 0;
     const update = () => {
       frame = 0;
@@ -609,12 +651,20 @@ export function ArticlePage() {
   if (!article) return <NotFoundPage />;
   const copyLink = async () => {
     try {
-      await navigator.clipboard.writeText(window.location.href);
+      await navigator.clipboard.writeText(
+        `https://www.baliandpartners.in/insights/${article.slug}`,
+      );
+      setCopyFallback(false);
       setCopyStatus("Link copied.");
     } catch {
       setCopyStatus(
-        "Copy the page address from your browser to share this perspective.",
+        "Automatic copying is unavailable. Select and copy the link below.",
       );
+      setCopyFallback(true);
+      requestAnimationFrame(() => {
+        copyInput.current?.focus();
+        copyInput.current?.select();
+      });
     }
   };
   return (
@@ -635,6 +685,24 @@ export function ArticlePage() {
         </div>
         <h1>{article.title}</h1>
         <p className="article-standfirst">{article.standfirst}</p>
+        {article.kind === "publication" && (
+          <p className="publication-byline">
+            By {article.author.name}
+            {article.author.role ? ` · ${article.author.role}` : ""}
+            <br />
+            Published{" "}
+            <time dateTime={article.publishedAt}>{article.publishedAt}</time>
+            {article.reviewedAt && (
+              <>
+                {" "}
+                · Substantive review{" "}
+                <time dateTime={article.reviewedAt}>{article.reviewedAt}</time>
+              </>
+            )}
+            {" · "}
+            {article.jurisdiction}
+          </p>
+        )}
       </section>
       <div className="container article-layout">
         <aside className="article-sidebar">
@@ -650,6 +718,7 @@ export function ArticlePage() {
           <button
             className="text-link article-copy"
             type="button"
+            disabled={!hydrated}
             onClick={copyLink}
           >
             {copyStatus === "Link copied." ? (
@@ -662,21 +731,75 @@ export function ArticlePage() {
           <p className="copy-status" role="status">
             {copyStatus}
           </p>
+          {copyFallback && (
+            <label className="article-copy-fallback">
+              Article link to copy
+              <input
+                ref={copyInput}
+                readOnly
+                value={`https://www.baliandpartners.in/insights/${article.slug}`}
+                onFocus={(event) => event.currentTarget.select()}
+              />
+            </label>
+          )}
         </aside>
         <div className="article-body" ref={bodyRef}>
           <p className="article-sample-note">
-            <strong>Editorial sample.</strong> Created for this website’s review
-            edition. This piece discusses editorial practice and is not legal
-            advice or a report on a legal development.
+            {article.kind === "sample" ? (
+              <>
+                <strong>Editorial sample.</strong> This piece demonstrates
+                editorial practice. It is not client work, legal advice or a
+                report on a legal development.
+              </>
+            ) : (
+              article.disclaimer
+            )}
           </p>
+          {article.kind === "publication" && (
+            <p className="publication-qualifications">
+              {article.qualifications}
+            </p>
+          )}
           {article.sections.map((section) => (
             <section key={section.id} id={section.id}>
               <h2>{section.title}</h2>
               {section.paragraphs.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}
+              {article.kind === "publication" && section.sourceIds?.length ? (
+                <p className="section-sources">
+                  Sources:{" "}
+                  {section.sourceIds.map((id, index) => (
+                    <span key={id}>
+                      {index ? "; " : ""}
+                      <a href={`#source-${id}`}>
+                        {
+                          article.sources.find((source) => source.id === id)
+                            ?.citation
+                        }
+                      </a>
+                    </span>
+                  ))}
+                </p>
+              ) : null}
             </section>
           ))}
+          {article.kind === "publication" && (
+            <section
+              className="publication-sources"
+              aria-labelledby="sources-title"
+            >
+              <h2 id="sources-title">Sources and authorities</h2>
+              <ol>
+                {article.sources.map((source) => (
+                  <li id={`source-${source.id}`} key={source.id}>
+                    <a href={source.url}>{source.title}</a>
+                    <p>{source.citation}</p>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          )}
           <div className="article-end-mark" aria-hidden="true">
             B<span>&amp;</span>P
           </div>
@@ -692,12 +815,17 @@ export function ArticlePage() {
           <h2 className="section-title">Another perspective.</h2>
         </div>
         {articles
-          .filter((item) => item.slug !== slug)
+          .filter(
+            (item) =>
+              item.slug !== slug &&
+              (!article.relatedSlugs?.length ||
+                article.relatedSlugs.includes(item.slug)),
+          )
           .map((item) => (
             <Link key={item.slug} to={`/insights/${item.slug}`}>
               <div>
                 <span className="eyebrow">
-                  {item.category} · Editorial sample
+                  {item.category} · {item.label}
                 </span>
                 <h3>{item.title}</h3>
               </div>
@@ -720,9 +848,11 @@ export function AboutPage() {
           <em>A legal perspective.</em>
         </h1>
         <div className="about-intro">
-          <div className="about-lettermark" aria-hidden="true">
-            B<span>&amp;</span>P
-          </div>
+          <FounderVisual>
+            <div className="about-lettermark" aria-hidden="true">
+              B<span>&amp;</span>P
+            </div>
+          </FounderVisual>
           <div>
             <p className="about-lead">
               Bali &amp; Partners is a specialist legal content, research and
@@ -730,9 +860,10 @@ export function AboutPage() {
             </p>
             <p className="body-copy">
               Our work sits where legal understanding meets written expression.
-              We help professionals and organisations develop research, content
-              and communication with the clarity and care their subject
-              deserves.
+              We support law firms, chambers, legal publishers and in-house
+              teams with focused research, substantive drafting and editorial
+              review. The aim is useful written work that makes time for the
+              detail while respecting the commissioning professional’s judgment.
             </p>
           </div>
         </div>
@@ -756,10 +887,10 @@ export function AboutPage() {
               into a focused specialist offering.
             </p>
             <p>
-              The consultancy’s perspective is straightforward: effective legal
-              content requires more than a polished sentence. It requires an
-              understanding of the material, a clear sense of audience and
-              careful judgment about what to say.
+              Legal professionals often have the expertise to contribute and
+              limited time to research, draft and prepare work for publication.
+              The consultancy brings dedicated capacity to that process, with an
+              agreed scope, traceable sources and final client approval.
             </p>
             <Link to="/approach" className="text-link">
               The approach behind the work{" "}

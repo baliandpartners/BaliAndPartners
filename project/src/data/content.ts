@@ -9,12 +9,21 @@ export interface Service {
   audience: string;
   question: string;
   principles: { title: string; text: string }[];
+  firstAssignment: string;
+  workflow: string;
+  clientResponsibility: string;
 }
 
 export const services: Service[] = [
   {
     number: "01",
     slug: "legal-research",
+    firstAssignment:
+      "A focused research note on an agreed legal question, jurisdiction and period, with a source list and clearly identified limits.",
+    workflow:
+      "We agree the research question, examine primary authorities and relevant commentary, then organise findings, competing interpretations and points requiring further review.",
+    clientResponsibility:
+      "The commissioning professional confirms the scope and assesses how the research applies to a particular matter. Advice, litigation strategy and final legal decisions remain with the responsible professional.",
     title: "Legal Research & Analysis",
     shortTitle: "Legal Research",
     description:
@@ -23,7 +32,8 @@ export const services: Service[] = [
       "Good legal communication starts well before the first draft. We help define the question, examine relevant materials and organise the findings into a useful foundation for writing and editorial decision-making.",
     deliverables: [
       "Issue-focused research notes",
-      "Legislative and regulatory backgrounders",
+      "Case-law and statutory research",
+      "Judgment summaries and regulatory backgrounders",
       "Source mapping and research outlines",
       "Research support for long-form publications",
     ],
@@ -48,6 +58,12 @@ export const services: Service[] = [
   {
     number: "02",
     slug: "legal-content-editorial",
+    firstAssignment:
+      "One research-backed article or judgment explainer, developed from an agreed brief and source material.",
+    workflow:
+      "We agree whether the assignment covers drafting, technical editing, proofreading or substantive source checks. An outline and draft move through editorial feedback and the agreed review stages.",
+    clientResponsibility:
+      "The author or commissioning team approves the legal analysis, citations, attribution and final text. Ghostwriting and publishing rights are agreed before work begins.",
     title: "Legal Content & Editorial",
     shortTitle: "Content & Editorial",
     description:
@@ -55,7 +71,9 @@ export const services: Service[] = [
     intro:
       "From an early outline to a considered final draft, we develop legal content with attention to meaning, structure and voice. Editorial and ghostwriting assignments are shaped around the author’s expertise and the needs of the intended reader.",
     deliverables: [
-      "Articles, explainers and client-facing updates",
+      "Research-backed articles and judgment analysis",
+      "Statutory and regulatory explainers",
+      "Technical editing and agreed citation checks",
       "Ghostwriting and substantive editorial support",
       "Long-form manuscript development",
       "Structural editing and publication preparation",
@@ -81,6 +99,12 @@ export const services: Service[] = [
   {
     number: "03",
     slug: "thought-leadership",
+    firstAssignment:
+      "An interview-led commentary piece that develops a professional’s own perspective on a clearly defined issue.",
+    workflow:
+      "A discussion establishes the author’s reasoning. Research tests the supporting material; a structured draft then develops the argument through editorial review.",
+    clientResponsibility:
+      "The named author supplies their genuine perspective and retains substantive judgment and final approval. No opinions, experiences or professional associations are invented.",
     title: "Thought Leadership",
     shortTitle: "Thought Leadership",
     description:
@@ -114,6 +138,12 @@ export const services: Service[] = [
   {
     number: "04",
     slug: "content-strategy",
+    firstAssignment:
+      "A review of one practice-area content collection, followed by a prioritised editorial plan.",
+    workflow:
+      "We review existing material and audience questions, map gaps and connections, and propose formats, a publishing calendar and a maintenance process suited to available capacity.",
+    clientResponsibility:
+      "The organisation approves priorities, assigns subject-matter reviewers and confirms publishing resources. Search-informed planning does not guarantee rankings or enquiries.",
     title: "Content Strategy",
     shortTitle: "Content Strategy",
     description:
@@ -122,7 +152,8 @@ export const services: Service[] = [
       "Individual pieces work better when they belong to a clear body of knowledge. We help organise topics, formats and publishing priorities around the audience, with legal SEO and content architecture supporting that editorial purpose.",
     deliverables: [
       "Content audits and editorial roadmaps",
-      "Topic architecture and publishing plans",
+      "Practice-area plans and editorial calendars",
+      "Knowledge architecture and publication maintenance",
       "Search-informed legal content briefs",
       "Website content structure and messaging",
     ],
@@ -147,6 +178,12 @@ export const services: Service[] = [
   {
     number: "05",
     slug: "professional-communications",
+    firstAssignment:
+      "A professional biography and a small set of agreed messages for a profile or public announcement.",
+    workflow:
+      "We collect verified background information, agree the audience and tone, and develop copy for factual, editorial and professional-conduct review.",
+    clientResponsibility:
+      "The individual or firm confirms all credentials, permissions and claims and obtains any required professional-conduct approval before publication.",
     title: "Professional Communications",
     shortTitle: "Professional Communications",
     description:
@@ -156,7 +193,7 @@ export const services: Service[] = [
     deliverables: [
       "LinkedIn editorial planning and writing",
       "Professional profiles and biographies",
-      "Firm and practice messaging",
+      "Firm narratives and professional announcements",
       "Editorial voice and communication guidance",
     ],
     audience:
@@ -183,17 +220,52 @@ export interface ArticleSection {
   id: string;
   title: string;
   paragraphs: string[];
+  sourceIds?: string[];
 }
 
-export interface Article {
+interface ArticleBase {
   slug: string;
   title: string;
   category: string;
   excerpt: string;
   description: string;
   standfirst: string;
-  label: "Editorial sample";
   sections: ArticleSection[];
+  relatedSlugs?: string[];
+}
+
+export interface ArticleSource {
+  id: string;
+  title: string;
+  citation: string;
+  url: string;
+}
+export type Article = ArticleBase &
+  (
+    | { kind: "sample"; label: "Editorial sample" }
+    | {
+        kind: "publication";
+        label: "Legal perspective";
+        approved: true;
+        author: { name: string; role?: string };
+        publishedAt: string;
+        reviewedAt?: string;
+        updatedAt?: string;
+        jurisdiction: string;
+        sources: ArticleSource[];
+        qualifications: string;
+        disclaimer: string;
+        indexable: boolean;
+      }
+  );
+
+/** Publication records must be approved and supplied with verified source material. */
+export function isIndexableArticle(article: Article) {
+  return (
+    article.kind === "publication" &&
+    article.approved === true &&
+    article.indexable
+  );
 }
 
 export const articles: Article[] = [
@@ -207,6 +279,7 @@ export const articles: Article[] = [
       "An editorial sample exploring how scope, structure and review help make legal writing clearer.",
     standfirst:
       "Clear legal writing is often described as a matter of style. More often, it is the visible result of decisions made before the writing begins.",
+    kind: "sample",
     label: "Editorial sample",
     sections: [
       {
@@ -248,6 +321,7 @@ export const articles: Article[] = [
       "An editorial sample on developing useful, well-supported professional commentary.",
     standfirst:
       "The value of professional commentary lies in the thinking it contributes. A strong opinion can attract attention; a carefully developed perspective gives the reader something to retain.",
+    kind: "sample",
     label: "Editorial sample",
     sections: [
       {
@@ -289,6 +363,7 @@ export const articles: Article[] = [
       "An editorial sample about organising a legal content library around readers and meaningful connections.",
     standfirst:
       "Publishing creates an archive. Editorial strategy gives that archive a shape: a connected body of work that remains useful beyond the day each piece appears.",
+    kind: "sample",
     label: "Editorial sample",
     sections: [
       {
@@ -332,4 +407,82 @@ export function readingTime(article: Article): string {
     ]),
   ].join(" ");
   return `${Math.max(1, Math.ceil(text.trim().split(/\s+/).length / 200))} min read`;
+}
+
+/** Reject incomplete publication records before any static pages are emitted. */
+export function validateArticles(records: Article[]) {
+  const slugs = new Set<string>();
+  const date = (value: string) =>
+    /^\d{4}-\d{2}-\d{2}$/.test(value) &&
+    !Number.isNaN(Date.parse(value)) &&
+    new Date(value).toISOString().slice(0, 10) === value;
+  for (const article of records) {
+    if (
+      !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(article.slug) ||
+      slugs.has(article.slug)
+    )
+      throw new Error(`Invalid or duplicate article slug: ${article.slug}`);
+    slugs.add(article.slug);
+    if (
+      !article.title.trim() ||
+      !article.standfirst.trim() ||
+      !article.sections.length
+    )
+      throw new Error(`Incomplete article: ${article.slug}`);
+    const ids = article.sections.map((section) => section.id);
+    if (
+      new Set(ids).size !== ids.length ||
+      ids.some((id) => !/^[a-z0-9-]+$/.test(id))
+    )
+      throw new Error(`Invalid section anchors: ${article.slug}`);
+    if (article.kind === "publication") {
+      if (
+        article.approved !== true ||
+        !article.author.name.trim() ||
+        !date(article.publishedAt) ||
+        (article.reviewedAt && !date(article.reviewedAt)) ||
+        (article.updatedAt &&
+          (!date(article.updatedAt) ||
+            article.updatedAt < article.publishedAt)) ||
+        !article.jurisdiction.trim() ||
+        !article.qualifications.trim() ||
+        !article.disclaimer.trim() ||
+        !article.sources.length
+      )
+        throw new Error(
+          `Publication approval, attribution, dates or sources missing: ${article.slug}`,
+        );
+      const sourceIds = new Set<string>();
+      for (const source of article.sources) {
+        if (
+          !/^[a-z0-9-]+$/.test(source.id) ||
+          sourceIds.has(source.id) ||
+          ids.includes(`source-${source.id}`) ||
+          !source.title.trim() ||
+          !source.citation.trim()
+        )
+          throw new Error(`Invalid source: ${article.slug}`);
+        const url = new URL(source.url);
+        if (url.protocol !== "https:" || url.username || url.password)
+          throw new Error(
+            `Source must use a public HTTPS URL: ${article.slug}`,
+          );
+        sourceIds.add(source.id);
+      }
+      if (
+        article.sections.some((section) =>
+          section.sourceIds?.some((id) => !sourceIds.has(id)),
+        )
+      )
+        throw new Error(`Unresolved citation: ${article.slug}`);
+    }
+  }
+  for (const article of records) {
+    if (
+      article.relatedSlugs?.some(
+        (slug) => !slugs.has(slug) || slug === article.slug,
+      )
+    )
+      throw new Error(`Invalid related reading: ${article.slug}`);
+  }
 }

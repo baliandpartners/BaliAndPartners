@@ -54,7 +54,7 @@
   font-variant-numeric: tabular-nums;
 }
 .specimen-tab-name {
-  font-family: "Newsreader", Georgia, serif;
+  font-family: var(--serif);
   font-size: clamp(25px, 3vw, 34px);
   line-height: 1.2;
 }
@@ -94,7 +94,7 @@
 }
 .specimen-document h3 {
   margin: 27px 0 24px;
-  font-family: "Newsreader", Georgia, serif;
+  font-family: var(--serif);
   font-size: clamp(25px, 3vw, 35px);
   font-weight: 400;
   line-height: 1.12;
@@ -116,7 +116,7 @@
 .specimen-source-copy > p {
   max-width: 62ch;
   margin: 0;
-  font-family: "Newsreader", Georgia, serif;
+  font-family: var(--serif);
   font-size: 19px;
   line-height: 1.8;
 }
@@ -163,7 +163,7 @@
   line-height: 1.7;
 }
 .specimen-annotation-mark {
-  font-family: "Newsreader", Georgia, serif;
+  font-family: var(--serif);
   font-size: 74px;
   line-height: 1;
   color: #7e8469;
@@ -171,7 +171,7 @@
 }
 .specimen-annotation h4 {
   margin: 15px 0 14px;
-  font-family: "Newsreader", Georgia, serif;
+  font-family: var(--serif);
   font-size: 25px;
   font-weight: 400;
   line-height: 1.1;
@@ -198,11 +198,11 @@
   text-align: left;
   cursor: pointer;
 }
-.specimen-next > span {
+.specimen-next > svg {
   font-size: 20px;
   transition: transform 180ms ease;
 }
-.specimen-next:hover > span {
+.specimen-next:hover > svg {
   transform: translate(2px, -2px);
 }
 .specimen-outline {
@@ -241,7 +241,7 @@
 }
 .specimen-clear-copy .specimen-clear-lead {
   max-width: 38ch;
-  font-family: "Newsreader", Georgia, serif;
+  font-family: var(--serif);
   font-size: 23px;
   line-height: 1.45;
   margin: 0 0 20px;
@@ -293,7 +293,7 @@
 }
 .enquiry-introduction h2 {
   margin: 0 0 15px;
-  font-family: "Newsreader", Georgia, serif;
+  font-family: var(--serif);
   font-size: clamp(30px, 3vw, 42px);
   font-weight: 400;
   line-height: 1.12;
@@ -460,7 +460,7 @@
 }
 .enquiry-draft h3 {
   margin: 0 0 12px;
-  font-family: "Newsreader", Georgia, serif;
+  font-family: var(--serif);
   font-size: 29px;
   font-weight: 400;
   line-height: 1.15;
@@ -646,4 +646,12 @@
     transition: none !important;
     scroll-behavior: auto !important;
   }
+}
+
+.specimen-next > svg,
+.specimen-margin-note > svg,
+.specimen-qualification > svg,
+.enquiry-submit > svg,
+.enquiry-open-email > svg {
+  flex-shrink: 0;
 }
