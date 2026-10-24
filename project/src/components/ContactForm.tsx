@@ -27,7 +27,7 @@ type FormValues = {
   message: string;
 };
 type FormErrors = Partial<Record<keyof FormValues, string>>;
-type PreparedDraft = { subject: string; body: string; href: string };
+
 const emptyForm: FormValues = {
   name: "",
   organisation: "",
@@ -55,13 +55,8 @@ export default function ContactForm() {
   const [values, setValues] = useState<FormValues>(emptyForm);
   const [errors, setErrors] = useState<FormErrors>({});
   const [attempted, setAttempted] = useState(false);
-  const [draft, setDraft] = useState<PreparedDraft | null>(null);
-  const [copyState, setCopyState] = useState<"idle" | "copied" | "fallback">(
-    "idle",
-  );
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const formRef = useRef<HTMLFormElement>(null);
-  const resultRef = useRef<HTMLDivElement>(null);
-  const copyRef = useRef<HTMLTextAreaElement>(null);
 
   function updateValue(
     event: ChangeEvent<
@@ -71,61 +66,52 @@ export default function ContactForm() {
     const field = event.target.name as keyof FormValues;
     const next = { ...values, [field]: event.target.value };
     setValues(next);
-    setDraft(null);
-    setCopyState("idle");
+    setStatus("idle");
     if (attempted) setErrors(validate(next));
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (status === "sending") return;
     setAttempted(true);
     const nextErrors = validate(values);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length) {
       const firstField = Object.keys(nextErrors)[0];
-      (
-        formRef.current?.elements.namedItem(firstField) as HTMLElement | null
-      )?.focus();
+      (formRef.current?.elements.namedItem(firstField) as HTMLElement | null)?.focus();
       return;
     }
-
-    const subject = `Website enquiry: ${values.nature}`;
-    const body = [
-      "Hello Bali & Partners,",
-      "",
-      values.message.trim(),
-      "",
-      `Name: ${values.name.trim()}`,
-      ...(values.organisation.trim()
-        ? [`Organisation: ${values.organisation.trim()}`]
-        : []),
-      `Email: ${values.email.trim()}`,
-      `Nature of enquiry: ${values.nature}`,
-    ].join("\n");
-    setDraft({
-      subject,
-      body,
-      href: `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
-    });
-    setCopyState("idle");
-    requestAnimationFrame(() => resultRef.current?.focus());
-  }
-
-  async function copyDraft() {
-    if (!draft) return;
+    const url = import.meta.env.VITE_SUPABASE_URL;
+    const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    if (!url || !key) {
+      setStatus("error");
+      return;
+    }
+    setStatus("sending");
     try {
-      if (!navigator.clipboard?.writeText)
-        throw new Error("Clipboard is unavailable");
-      await navigator.clipboard.writeText(
-        `To: ${contactEmail}\nSubject: ${draft.subject}\n\n${draft.body}`,
-      );
-      setCopyState("copied");
-    } catch {
-      setCopyState("fallback");
-      requestAnimationFrame(() => {
-        copyRef.current?.focus();
-        copyRef.current?.select();
+      const response = await fetch(`${url.replace(/\/$/, "")}/rest/v1/contact_submissions`, {
+        method: "POST",
+        headers: {
+          apikey: key,
+          Authorization: `Bearer ${key}`,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify({
+          name: values.name.trim(),
+          organisation: values.organisation.trim() || null,
+          email: values.email.trim(),
+          nature: values.nature,
+          message: values.message.trim(),
+        }),
       });
+      if (!response.ok) throw new Error("Unable to submit enquiry");
+      setStatus("sent");
+      setValues(emptyForm);
+      setAttempted(false);
+      setErrors({});
+    } catch {
+      setStatus("error");
     }
   }
 
@@ -140,7 +126,7 @@ export default function ContactForm() {
   return (
     <div className="enquiry-composer">
       <div className="enquiry-introduction">
-        <h2>Prepare an email enquiry.</h2>
+        <h2>Send an enquiry.</h2>
         <p>
           A little context is a useful starting point. Outline the work, your
           audience and any relevant timing.
@@ -260,61 +246,29 @@ export default function ContactForm() {
           {fieldError("message")}
         </div>
         <p className="enquiry-privacy-note">
-          This form prepares a draft on your device. Nothing is sent or saved by
-          the form. You review and send it using your email app.
+          Your enquiry will be stored securely for the purpose of reviewing and responding to your request. Please do not share confidential or sensitive case information.
         </p>
         {attempted && Object.keys(errors).length > 0 && (
           <p className="enquiry-error-summary" role="alert">
-            Please check the highlighted fields before preparing your email.
+            Please check the highlighted fields before submitting your enquiry.
           </p>
         )}
-        <button type="submit" className="enquiry-submit" disabled={!hydrated}>
-          Prepare email <ArrowUpRight size={18} aria-hidden="true" />
+        <button type="submit" className="enquiry-submit" disabled={!hydrated || status === "sending"}>
+          {status === "sending" ? "Sending…" : "Send enquiry"} <ArrowUpRight size={18} aria-hidden="true" />
         </button>
       </form>
 
-      {draft && (
-        <div
-          className="enquiry-draft"
-          ref={resultRef}
-          tabIndex={-1}
-          aria-labelledby={`${id}-draft-title`}
-        >
-          <span className="enquiry-draft-eyebrow">Ready for your review</span>
-          <h3 id={`${id}-draft-title`}>Your draft is prepared.</h3>
-          <p>
-            Open it in your email app, review the details, then send it to{" "}
-            <a href={`mailto:${contactEmail}`}>{contactEmail}</a>. No message
-            has been sent yet.
-          </p>
-          <div className="enquiry-draft-actions">
-            <a href={draft.href} className="enquiry-open-email">
-              Open email draft <ArrowUpRight size={18} aria-hidden="true" />
-            </a>
-            <button type="button" onClick={copyDraft} className="enquiry-copy">
-              {copyState === "copied" ? "Draft copied" : "Copy draft"}
-            </button>
-          </div>
-          <p className="enquiry-copy-status" role="status" aria-live="polite">
-            {copyState === "copied" &&
-              "Copied. You can paste the draft into your preferred email service."}
-            {copyState === "fallback" &&
-              "Automatic copying is unavailable. Select and copy the draft below."}
-          </p>
-          {copyState === "fallback" && (
-            <div className="enquiry-field enquiry-copy-fallback">
-              <label htmlFor={`${id}-copy`}>Email draft to copy</label>
-              <textarea
-                ref={copyRef}
-                id={`${id}-copy`}
-                readOnly
-                rows={10}
-                value={`To: ${contactEmail}\nSubject: ${draft.subject}\n\n${draft.body}`}
-                onFocus={(event) => event.currentTarget.select()}
-              />
-            </div>
-          )}
+      {status === "sent" && (
+        <div className="enquiry-draft" role="status" aria-live="polite">
+          <h3>Your enquiry has been received.</h3>
+          <p>Thank you for writing to Bali &amp; Partners. Your message has been recorded.</p>
         </div>
+      )}
+      {status === "error" && (
+        <p className="enquiry-error-summary" role="alert">
+          We could not securely submit your enquiry. Nothing has been confirmed as saved.
+          Please email <a href={`mailto:${contactEmail}`}>{contactEmail}</a> instead.
+        </p>
       )}
     </div>
   );
