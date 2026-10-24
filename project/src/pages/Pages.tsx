@@ -873,28 +873,36 @@ export function AboutPage() {
           <div>
             <p className="eyebrow">The founder</p>
             <h2 className="section-title">Shashwat Bali</h2>
-            <span className="founder-location">New Delhi, India</span>
+            <span className="founder-location">Advocate &amp; Founder · New Delhi, India</span>
           </div>
           <div className="founder-copy">
-            <h3>
-              A practice centred
-              <br />
-              on the written word.
-            </h3>
+            <h3>A perspective shaped<br />by legal practice.</h3>
             <p>
-              Bali &amp; Partners was founded by Shashwat Bali to bring legal
-              research, editorial development and professional communication
-              into a focused specialist offering.
+              Shashwat Bali is an advocate and the founder of Bali &amp; Partners.
+              His academic background includes legal studies at Symbiosis Law School,
+              Noida, and academic experience at Leeds Beckett University,
+              United Kingdom.
             </p>
             <p>
-              Legal professionals often have the expertise to contribute and
-              limited time to research, draft and prepare work for publication.
-              The consultancy brings dedicated capacity to that process, with an
-              agreed scope, traceable sources and final client approval.
+              His professional experience has been shaped by working with a
+              distinguished Senior Advocate, independent Advocates-on-Record,
+              full-service law firms and boutique legal practices, including
+              a Legal 500-recognised firm.
+            </p>
+            <p>
+              Over the past three years, he has undertaken legal research,
+              drafting and analytical assignments through individual projects
+              and sustained professional associations with firms and chambers.
+              His exposure encompasses commercial disputes, arbitration,
+              regulatory work and complex legal documentation.
+            </p>
+            <p>
+              Bali &amp; Partners draws on that practical foundation to deliver
+              research-led legal content, editorial development and professional
+              communication with precision, discretion and attention to detail.
             </p>
             <Link to="/approach" className="text-link">
-              The approach behind the work{" "}
-              <ArrowUpRight size={16} aria-hidden="true" />
+              The approach behind the work <ArrowUpRight size={16} aria-hidden="true" />
             </Link>
           </div>
         </div>
@@ -1016,7 +1024,7 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
         <h1 className="display">
           {privacy ? "Privacy notice." : "Website terms."}
         </h1>
-        <p className="legal-draft-label">Last updated · 18 October 2026</p>
+        <p className="legal-draft-label">Last updated · 24 October 2026</p>
       </section>
       <div className="container legal-layout">
         <aside>
@@ -1055,11 +1063,11 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
                   records or sensitive personal information.
                 </p>
                 <p>
-                  The current interface prepares an email through your email
-                  application. It does not send the enquiry directly to a server
-                  or store it in the browser’s local storage. Your email
-                  provider handles the draft and any email you choose to send
-                  under its own policies.
+                  When the online form is enabled, the information submitted is
+                  transmitted securely to our Supabase-hosted enquiry database.
+                  It is used to review and respond to enquiries. If direct
+                  submission is unavailable, the interface will state this
+                  rather than indicate an enquiry has been received.
                 </p>
               </section>
               <section>
@@ -1074,8 +1082,7 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
                 <p>
                   For questions about access to, retention of or deletion of
                   correspondence you have sent us, please contact the email
-                  address above. This website does not maintain an enquiry
-                  database.
+                  address above. Form enquiries may be stored securely in our database, accessible only to authorised administrators.
                 </p>
               </section>
               <section>
