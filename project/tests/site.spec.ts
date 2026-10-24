@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 import AxeBuilder from "@axe-core/playwright";
 import { articles, services } from "../src/data/content";
 
@@ -94,7 +94,7 @@ for (const route of ["/insights", "/contact"]) {
     });
     await page.route("**/assets/Pages-*.js", async (request) => {
       await pending;
-      await request.continue();
+      await request.fallback();
     });
     try {
       await page.goto(route, { waitUntil: "commit" });
@@ -112,7 +112,7 @@ for (const route of ["/insights", "/contact"]) {
       if (route === "/insights") {
         await expect(page.locator(".insight-entry")).toHaveCount(1);
       } else {
-        await page.getByLabel("Work email").fill("early@example.test");
+        await page.getByLabel("Email address").fill("early@example.test");
         await page
           .getByLabel("Nature of enquiry")
           .selectOption("Content strategy");
@@ -135,11 +135,7 @@ for (const route of ["/insights", "/contact"]) {
 for (const width of [320, 375, 390, 430, 768, 1024, 1440, 1920]) {
   test(`responsive layout at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
-    for (const route of [
-      ...principal,
-      "/expertise/professional-communications",
-      "/insights/precision-before-publication",
-    ]) {
+    for (const route of [...routes]) {
       await page.goto(route);
       await page.evaluate(() => document.fonts.ready);
       const overflow = await page.evaluate(
@@ -290,14 +286,14 @@ test("enquiry validates and prepares a real email draft without sending or persi
   await expect(page.getByRole("alert")).toContainText("highlighted fields");
   await expect(page.getByLabel("Your name")).toBeFocused();
   await page.getByLabel("Your name").fill("Review Person");
-  await page.getByLabel("Work email").fill("not-an-email");
+  await page.getByLabel("Email address").fill("not-an-email");
   await page
     .getByRole("button", { name: "Prepare email", exact: true })
     .click();
   await expect(
     page.getByText("Please enter a valid email address."),
   ).toBeVisible();
-  await page.getByLabel("Work email").fill("review@example.test");
+  await page.getByLabel("Email address").fill("review@example.test");
   await page.getByLabel("Nature of enquiry").selectOption("Content strategy");
   await page
     .getByLabel("A brief outline")
@@ -349,11 +345,7 @@ test("reduced motion and keyboard skip link", async ({ page }) => {
 for (const width of [390, 1440]) {
   test(`accessibility review at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
-    for (const route of [
-      ...principal,
-      "/expertise/legal-research",
-      "/insights/precision-before-publication",
-    ]) {
+    for (const route of [...routes, "/unknown-accessibility-page"]) {
       await page.goto(route);
       await page.evaluate(() =>
         Promise.all(
@@ -361,7 +353,7 @@ for (const width of [390, 1440]) {
         ),
       );
       const results = await new AxeBuilder({ page })
-        .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+        .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
         .analyze();
       expect(
         results.violations.map((v) => ({

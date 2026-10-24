@@ -1,6 +1,8 @@
 import { renderToString } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
 import App from "./App";
+import { articles, validateArticles } from "./data/content";
+validateArticles(articles);
 import * as Pages from "./pages/Pages";
 import {
   metadataForPath,
@@ -9,7 +11,7 @@ import {
   isProductionSite,
 } from "./data/metadata";
 
-export { routes, isProductionSite };
+export { routes, isProductionSite, metadataForPath };
 
 export function render(path: string) {
   return {

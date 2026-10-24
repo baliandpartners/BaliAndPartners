@@ -157,9 +157,9 @@ export function ClosingNote() {
         </div>
         <div className="closing-aside">
           <p>
-            Tell us what you are thinking about.
+            Share the subject, audience and intended format.
             <br />
-            We will take it from there.
+            We can discuss the scope and the support you need.
           </p>
           <Link className="button button-dark" to="/contact">
             Start a conversation <ArrowUpRight size={19} />
@@ -195,7 +195,7 @@ function Footer() {
             <Link to="/contact">Contact</Link>
           </div>
           <div className="footer-contact">
-            <p className="eyebrow">In good company</p>
+            <p className="eyebrow">Get in touch</p>
             <a href="mailto:Shashwat@baliandpartners.in">
               Shashwat@baliandpartners.in <ArrowUpRight size={16} />
             </a>
@@ -232,13 +232,17 @@ function RouteEffects() {
   const { pathname, hash } = useLocation();
   const previousPath = useRef(pathname);
   useEffect(() => {
-    if (hash)
+    if (hash) {
+      let id = hash.slice(1);
+      try {
+        id = decodeURIComponent(id);
+      } catch {
+        /* A malformed fragment is harmless. */
+      }
       requestAnimationFrame(() =>
-        document
-          .getElementById(decodeURIComponent(hash.slice(1)))
-          ?.scrollIntoView(),
+        document.getElementById(id)?.scrollIntoView(),
       );
-    else if (previousPath.current !== pathname) {
+    } else if (previousPath.current !== pathname) {
       window.scrollTo(0, 0);
       document.getElementById("main-content")?.focus({ preventScroll: true });
     }

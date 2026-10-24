@@ -187,7 +187,7 @@ export default function ContactForm() {
         </div>
         <div className="enquiry-field">
           <label htmlFor={`${id}-email`}>
-            Work email <span className="enquiry-required">(required)</span>
+            Email address <span className="enquiry-required">(required)</span>
           </label>
           <input
             id={`${id}-email`}

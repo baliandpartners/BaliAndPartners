@@ -57,6 +57,37 @@ createServer(async (request, response) => {
       return;
     }
     let status = 200;
+    // Match Vercel cleanUrls/trailingSlash policy without rewriting unknown URLs.
+    const cleanPath =
+      pathname === "/index.html"
+        ? "/"
+        : pathname
+            .replace(/\/index\.html$/, "")
+            .replace(/\/$/, "")
+            .replace(/\.html$/, "");
+    if (
+      pathname !== "/" &&
+      cleanPath !== pathname &&
+      cleanPath.startsWith("/") &&
+      !cleanPath.startsWith("//")
+    ) {
+      try {
+        const candidate = resolve(root, `.${cleanPath}`, "index.html");
+        if (
+          candidate.startsWith(`${root}${sep}`) &&
+          (await stat(candidate)).isFile()
+        ) {
+          response.writeHead(308, {
+            Location:
+              cleanPath + new URL(request.url, "http://localhost").search,
+          });
+          response.end();
+          return;
+        }
+      } catch {
+        /* Unknown routes still receive the real 404 below. */
+      }
+    }
     try {
       if ((await stat(file)).isDirectory()) file = resolve(file, "index.html");
       await stat(file);

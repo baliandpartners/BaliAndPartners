@@ -3,7 +3,7 @@
   font-family: "Newsreader Variable";
   font-style: normal;
   font-display: swap;
-  font-weight: 200 800;
+  font-weight: 401 800;
   src: url("../node_modules/@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2")
     format("woff2");
 }
@@ -11,7 +11,7 @@
   font-family: "Newsreader Variable";
   font-style: italic;
   font-display: swap;
-  font-weight: 200 800;
+  font-weight: 401 800;
   src: url("../node_modules/@fontsource-variable/newsreader/files/newsreader-latin-wght-italic.woff2")
     format("woff2");
 }
@@ -21,5 +21,39 @@
   font-display: swap;
   font-weight: 100 1000;
   src: url("../node_modules/@fontsource-variable/dm-sans/files/dm-sans-latin-wght-normal.woff2")
+    format("woff2");
+}
+
+/* Exact display weight used throughout the design; retain variable faces above for other weights. */
+@font-face {
+  font-family: "Newsreader Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url("./assets/newsreader-latin-normal-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Newsreader Variable";
+  font-style: italic;
+  font-display: swap;
+  font-weight: 400;
+  src: url("./assets/newsreader-latin-italic-400.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Newsreader Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 399;
+  src: url("../node_modules/@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2")
+    format("woff2");
+}
+
+@font-face {
+  font-family: "Newsreader Variable";
+  font-style: italic;
+  font-display: swap;
+  font-weight: 200 399;
+  src: url("../node_modules/@fontsource-variable/newsreader/files/newsreader-latin-wght-italic.woff2")
     format("woff2");
 }

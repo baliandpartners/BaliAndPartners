@@ -1,10 +1,19 @@
 import { readFile, writeFile, mkdir, rm, readdir } from "node:fs/promises";
 import { resolve, dirname } from "node:path";
-import { render, routes, isProductionSite } from "../.ssr/entry-server.js";
+import {
+  render,
+  routes,
+  isProductionSite,
+  metadataForPath,
+} from "../.ssr/entry-server.js";
 
 const output = resolve("dist");
-const fonts = (await readdir(resolve(output, "assets"))).filter((name) =>
-  name.endsWith(".woff2"),
+const fonts = (await readdir(resolve(output, "assets"))).filter(
+  (name) =>
+    name.endsWith(".woff2") &&
+    (name.startsWith("dm-sans-") ||
+      name.startsWith("newsreader-latin-normal-400-") ||
+      name.startsWith("newsreader-latin-italic-400-")),
 );
 const preload = fonts
   .map(
@@ -46,7 +55,11 @@ for (const path of [...routes, "/404"]) {
 
 const origin = "https://www.baliandpartners.in";
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${routes
-  .filter((path) => !path.startsWith("/insights/"))
+  .filter(
+    (path) =>
+      !path.startsWith("/insights/") ||
+      metadataForPath(path).robots === "index, follow",
+  )
   .map(
     (path) => `  <url><loc>${origin}${path === "/" ? "/" : path}</loc></url>`,
   )
