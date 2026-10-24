@@ -89,7 +89,7 @@ export default function ContactForm() {
     }
     setStatus("sending");
     try {
-      const response = await fetch(`${url.replace(/\\/$/, "")}/rest/v1/contact_submissions`, {
+      const response = await fetch(`${url.replace(/\/$/, "")}/rest/v1/contact_submissions`, {
         method: "POST",
         headers: {
           apikey: key,
@@ -250,7 +250,7 @@ export default function ContactForm() {
         </p>
         {attempted && Object.keys(errors).length > 0 && (
           <p className="enquiry-error-summary" role="alert">
-            Please check the highlighted fields before preparing your email.
+            Please check the highlighted fields before submitting your enquiry.
           </p>
         )}
         <button type="submit" className="enquiry-submit" disabled={!hydrated || status === "sending"}>
