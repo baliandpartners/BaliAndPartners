@@ -1,3 +1,4 @@
+import { useHydrated } from "../hooks/useHydrated";
 import { useState } from "react";
 import { ArrowDown, ArrowRight, ArrowUpRight, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -29,6 +30,7 @@ const process = [
   },
 ];
 export default function Home() {
+  const hydrated = useHydrated();
   const [activeService, setActiveService] = useState(0);
   const [activeStep, setActiveStep] = useState(0);
   return (
@@ -218,6 +220,7 @@ export default function Home() {
               <button
                 key={step.name}
                 type="button"
+                disabled={!hydrated}
                 className={`method-step${activeStep === i ? " is-active" : ""}`}
                 aria-expanded={activeStep === i}
                 aria-controls={`method-description-${i}`}

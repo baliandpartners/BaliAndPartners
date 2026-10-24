@@ -5,6 +5,7 @@ import {
   type ChangeEvent,
   type FormEvent,
 } from "react";
+import { ArrowUpRight } from "lucide-react";
 import "./interactive.css";
 import { useHydrated } from "../hooks/useHydrated";
 
@@ -268,7 +269,7 @@ export default function ContactForm() {
           </p>
         )}
         <button type="submit" className="enquiry-submit" disabled={!hydrated}>
-          Prepare email <span aria-hidden="true">↗</span>
+          Prepare email <ArrowUpRight size={18} aria-hidden="true" />
         </button>
       </form>
 
@@ -288,7 +289,7 @@ export default function ContactForm() {
           </p>
           <div className="enquiry-draft-actions">
             <a href={draft.href} className="enquiry-open-email">
-              Open email draft <span aria-hidden="true">↗</span>
+              Open email draft <ArrowUpRight size={18} aria-hidden="true" />
             </a>
             <button type="button" onClick={copyDraft} className="enquiry-copy">
               {copyState === "copied" ? "Draft copied" : "Copy draft"}

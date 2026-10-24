@@ -1,6 +1,7 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { ArrowDown, ArrowRight, ArrowUpRight, Menu, X } from "lucide-react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+import { useHydrated } from "../hooks/useHydrated";
 import { applyPageMetadata } from "../data/metadata";
 const navigation = [
   ["Expertise", "/expertise"],
@@ -28,6 +29,7 @@ export function Brand({ light = false }: { light?: boolean }) {
   );
 }
 function Header() {
+  const hydrated = useHydrated();
   const [open, setOpen] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const toggle = useRef<HTMLButtonElement>(null);
@@ -63,6 +65,7 @@ function Header() {
             Start a conversation <ArrowUpRight size={17} />
           </Link>
           <button
+            disabled={!hydrated}
             ref={toggle}
             type="button"
             className="menu-toggle"

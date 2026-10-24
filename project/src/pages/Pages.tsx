@@ -288,6 +288,7 @@ export function ServicePage() {
 }
 
 export function ApproachPage() {
+  const hydrated = useHydrated();
   const [active, setActive] = useState(0);
   return (
     <>
@@ -321,6 +322,7 @@ export function ApproachPage() {
             <div className="method-steps" aria-label="Explore our process">
               {process.map((step, index) => (
                 <button
+                  disabled={!hydrated}
                   key={step.title}
                   type="button"
                   aria-pressed={active === index}
@@ -548,6 +550,7 @@ export function InsightsPage() {
             {categories.map((item) => (
               <button
                 key={item}
+                disabled={!hydrated}
                 type="button"
                 className={category === item ? "is-active" : ""}
                 onClick={() => updateFilter("category", item)}
@@ -605,6 +608,7 @@ export function InsightsPage() {
 }
 
 export function ArticlePage() {
+  const hydrated = useHydrated();
   const { slug } = useParams();
   const article = articles.find((item) => item.slug === slug);
   const [copyStatus, setCopyStatus] = useState("");
@@ -712,6 +716,7 @@ export function ArticlePage() {
           <button
             className="text-link article-copy"
             type="button"
+            disabled={!hydrated}
             onClick={copyLink}
           >
             {copyStatus === "Link copied." ? (

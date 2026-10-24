@@ -1,6 +1,6 @@
 # Owner information register
 
-Prepared 22 October 2026. Missing optional material stays unpublished. Existing content is retained where it is already supplied; no new credentials, affiliations or client claims have been invented. Enter credentials only through secure environment settings, never this file or chat.
+Updated 24 October 2026. Missing optional material stays unpublished. Existing content is retained where it is already supplied; no new credentials, affiliations or client claims have been invented. Enter credentials only through secure environment settings, never this file or chat.
 
 | Information / asset | Why needed | Area | Essential before launch? | Acceptable format | Current fallback | Owner action |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -13,7 +13,7 @@ Prepared 22 October 2026. Missing optional material stays unpublished. Existing 
 | Image permission | Rights for portrait | Founder image | Before adding image | Written permission / licence | No portrait published | Confirm photographer and subject permission |
 | Business email | Ensure enquiries reach the right person | Contact, footer, policies | Confirm for release | Confirm Shashwat@baliandpartners.in or corrected address | Existing email retained | Confirm mailbox is monitored |
 | Telephone | Ensure calls reach the business | Contact, footer | Confirm for release | Confirm +91 82690 26882 or correction | Existing number retained | Confirm public use |
-| Official LinkedIn URL | Verify organisational destination | Footer | Confirm before relying on it | Official organisation URL | Existing /company/balipartners/ link retained; network inspection blocked | Verify the account and URL |
+| Official LinkedIn URL | Verify organisational destination | Footer | Confirm before relying on it | Official organisation URL | Existing /company/balipartners/ link retained; automated access returns HTTP 999 | Verify the account and URL |
 | Public office address | Avoid implying a location not supplied | Contact | Optional | Approved postal address | New Delhi, India only | Supply only if appropriate to publish |
 | Enquiry handling preference | Choose direct delivery or draft workflow | Contact | Existing draft works | Provider name and workflow decision | Local email draft, copy and direct email | Confirm desired workflow |
 | Two or three substantive writing samples | Demonstrate actual legal research | Insights | Optional; required for real publications | Approved article files with scope and sources | Three clearly labelled editorial samples | Supply publishable material |
@@ -31,10 +31,13 @@ Prepared 22 October 2026. Missing optional material stays unpublished. Existing 
 | Retention, processors and access | Accurate privacy description | Privacy, direct enquiries | Before adding processors | Actual policy, provider terms and access arrangements | Current local draft and hosting description | Decide retention / access practices |
 | Optional analytics and consent | Avoid undisclosed tracking | All pages / privacy | Only if introducing analytics | Provider, purpose and consent decision | No analytics or marketing cookies | Decide whether analytics is needed |
 | Indian professional-conduct review | Determine applicable BCI restrictions, including Rule 36 | Positioning and enquiry mechanisms | Qualified owner decision for release | Review by a competent professional | Restrained consultancy wording, no outcome promises or fabricated claims | Obtain applicable review; consultancy label alone is not a conclusion |
-| Vercel project settings and hosted access | Verify root, branch, build source and preview | Deployment | Required before this release is published | Read access to existing bali-and-partners project | Local validation; existing production preserved | Enable audit domains in environment settings and provide project access if needed |
+| Vercel project settings and hosted access | Verify root, branch, build source and preview | Deployment | Required before this release is published | Read access to existing bali-and-partners project | Local validation; existing production preserved | Provide authenticated preview and read-only project settings access |
 | Search Console property access | Inspect indexing / old URLs | SEO | Optional for code release | Verified property access | Prepared cleanup checklist; no removal claim | Review canonical indexing and submitted sitemap |
 
-The network draft requests only website/domain variants, LinkedIn, GitHub API, Vercel API/site and Vercel previews. Saving the draft does not itself apply network policy or publish the environment.
+The earlier network-access draft has taken effect for website and GitHub auditing; it does not grant Vercel account authentication or publish production.
 
 
 Update 24 October: hosted website and GitHub deployment access is now working. Vercel account-level settings remain inaccessible (403). LinkedIn rejects automated access (999). Required remaining confirmations are project settings and official business/contact/provider facts; website audit access itself is no longer blocked.
+
+
+Release blocker: the new feature preview is protected by Vercel login. Provide authenticated preview access through approved secure environment configuration, and read access to the existing project settings, before hosted acceptance checks and production release. No production update has been made.

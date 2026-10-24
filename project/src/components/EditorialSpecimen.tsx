@@ -1,5 +1,7 @@
 import { useId, useRef, useState, type KeyboardEvent } from "react";
+import { ArrowUpRight, CornerDownRight, RotateCcw } from "lucide-react";
 import "./interactive.css";
+import { useHydrated } from "../hooks/useHydrated";
 
 const stages = [
   {
@@ -32,6 +34,7 @@ const stages = [
 ];
 
 export default function EditorialSpecimen() {
+  const hydrated = useHydrated();
   const [active, setActive] = useState(0);
   const id = useId();
   const tabs = useRef<Array<HTMLButtonElement | null>>([]);
@@ -64,6 +67,7 @@ export default function EditorialSpecimen() {
             key={stage.name}
             id={`${id}-tab-${index}`}
             type="button"
+            disabled={!hydrated}
             role="tab"
             aria-selected={active === index}
             aria-controls={`${id}-panel-${index}`}
@@ -120,8 +124,8 @@ export default function EditorialSpecimen() {
                   of this clause.
                 </p>
                 <div className="specimen-margin-note">
-                  <span aria-hidden="true">↳</span> Right · duration · timing ·
-                  form · exception
+                  <CornerDownRight size={16} aria-hidden="true" /> Right ·
+                  duration · timing · form · exception
                 </div>
               </div>
             )}
@@ -180,8 +184,8 @@ export default function EditorialSpecimen() {
                   </li>
                 </ol>
                 <p className="specimen-qualification">
-                  <span aria-hidden="true">↳</span> Email does not count as
-                  notice under this clause.
+                  <CornerDownRight size={16} aria-hidden="true" /> Email does
+                  not count as notice under this clause.
                 </p>
               </div>
             )}
@@ -207,6 +211,7 @@ export default function EditorialSpecimen() {
             {index < stages.length - 1 ? (
               <button
                 type="button"
+                disabled={!hydrated}
                 className="specimen-next"
                 onClick={() => {
                   setActive(index + 1);
@@ -214,18 +219,19 @@ export default function EditorialSpecimen() {
                 }}
               >
                 Explore {stages[index + 1].name.toLowerCase()}{" "}
-                <span aria-hidden="true">↗</span>
+                <ArrowUpRight size={18} aria-hidden="true" />
               </button>
             ) : (
               <button
                 type="button"
+                disabled={!hydrated}
                 className="specimen-next"
                 onClick={() => {
                   setActive(0);
                   tabs.current[0]?.focus();
                 }}
               >
-                Revisit the source <span aria-hidden="true">↶</span>
+                Revisit the source <RotateCcw size={18} aria-hidden="true" />
               </button>
             )}
           </aside>

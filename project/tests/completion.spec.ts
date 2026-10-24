@@ -259,8 +259,8 @@ test("touch and landscape navigation close, restore focus and release body scrol
     hasTouch: true,
     isMobile: true,
   });
-  await configureHostedTransport(context);
   const page = await context.newPage();
+  await configureHostedTransport(page);
   await page.goto(baseURL!);
   const open = page.getByRole("button", { name: "Open navigation" });
   await open.tap();
@@ -280,7 +280,8 @@ test("touch and landscape navigation close, restore focus and release body scrol
   await page.getByRole("dialog").getByRole("link", { name: /About/ }).tap();
   await expect(page).toHaveURL(/\/about$/);
   await expect(page.getByRole("dialog")).not.toBeVisible();
-  await context.unrouteAll({ behavior: "wait" });
+  await page.waitForLoadState("networkidle");
+  await page.unrouteAll({ behavior: "wait" });
   await context.close();
 });
 
@@ -333,4 +334,31 @@ test("publication validation rejects incomplete, unapproved and broken-source co
       },
     ]),
   ).toThrow();
+});
+
+test("early method selection waits for hydration and preserves the first click", async ({
+  page,
+}) => {
+  let release!: () => void;
+  const pending = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  await page.route("**/assets/Pages-*.js", async (route) => {
+    await pending;
+    await route.fallback();
+  });
+  try {
+    await page.goto("/approach", { waitUntil: "commit" });
+    const research = page.getByRole("button", { name: /Research/ });
+    await expect(research).toBeDisabled();
+    const click = research.click();
+    release();
+    await click;
+    await expect(research).toBeEnabled();
+    await expect(page.locator("#method-detail")).toContainText(
+      "Establish the substance",
+    );
+  } finally {
+    release();
+  }
 });
