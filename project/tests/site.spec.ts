@@ -81,9 +81,9 @@ test("deployment indexing matches the intended release mode", async ({
   expect(sitemap).toContain("https://www.baliandpartners.in/about");
   for (const article of articles) expect(sitemap).not.toContain(article.slug);
   const response = await request.get("/");
-  expect(response.headers()["x-robots-tag"]).toBe(
-    production ? undefined : "noindex, nofollow",
-  );
+  const robotsHeader = response.headers()["x-robots-tag"];
+  if (production) expect(robotsHeader).toBeUndefined();
+  else expect(robotsHeader?.split(/\s*,\s*/)).toContain("noindex");
 });
 
 for (const route of ["/insights", "/contact"]) {

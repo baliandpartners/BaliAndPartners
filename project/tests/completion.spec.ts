@@ -75,6 +75,7 @@ test("approach selectors and every disclosure work from keyboard", async ({
     const button = page
       .locator(".method-steps button")
       .filter({ hasText: name });
+    await expect(button).toBeEnabled();
     await button.focus();
     await page.keyboard.press("Space");
     await expect(button).toHaveAttribute("aria-pressed", "true");
@@ -110,6 +111,39 @@ test("reading-room filters combine, reset and survive browser back", async ({
   await expect(page.locator(".insight-entry")).toHaveCount(articles.length);
   await page.getByRole("searchbox").fill("writing");
   await expect(page.locator(".insight-entry")).toHaveCount(1);
+});
+
+test("rapid category and search changes preserve both filters", async ({
+  page,
+}) => {
+  await page.goto("/insights?category=Editorial+Perspectives&q=Precision");
+  await expect(
+    page.getByRole("button", { name: "Commentary", exact: true }),
+  ).toBeEnabled();
+  await page.evaluate(() => {
+    const category = Array.from(
+      document.querySelectorAll<HTMLButtonElement>(".category-filters button"),
+    ).find((button) => button.textContent === "Commentary")!;
+    const input = document.querySelector<HTMLInputElement>(
+      'input[type="search"]',
+    )!;
+    category.click();
+    Object.getOwnPropertyDescriptor(
+      HTMLInputElement.prototype,
+      "value",
+    )!.set!.call(input, "position");
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  await expect(
+    page.getByRole("button", { name: "Commentary", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByRole("searchbox")).toHaveValue("position");
+  await expect(
+    page.getByRole("link", {
+      name: "A point of view is more than a position.",
+    }),
+  ).toBeVisible();
+  await expect(page).toHaveURL(/category=Commentary&q=position/);
 });
 
 test("every article supports copy, selectable fallback, anchors, progress and related links", async ({
@@ -251,6 +285,7 @@ test("touch and landscape navigation close, restore focus and release body scrol
   baseURL,
 }) => {
   const context = await browser.newContext({
+    storageState: process.env.PLAYWRIGHT_STORAGE_STATE,
     proxy:
       process.env.HOSTED_AUDIT_TRANSPORT === "1"
         ? { server: process.env.HTTPS_PROXY || process.env.https_proxy! }

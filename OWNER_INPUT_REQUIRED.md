@@ -40,4 +40,4 @@ The earlier network-access draft has taken effect for website and GitHub auditin
 Update 24 October: hosted website and GitHub deployment access is now working. Vercel account-level settings remain inaccessible (403). LinkedIn rejects automated access (999). Required remaining confirmations are project settings and official business/contact/provider facts; website audit access itself is no longer blocked.
 
 
-Release blocker: the new feature preview is protected by Vercel login. Provide authenticated preview access through approved secure environment configuration, and read access to the existing project settings, before hosted acceptance checks and production release. No production update has been made.
+Preview-access update: the owner supplied a working Vercel sharing link and hosted testing is now available. The remaining deployment-setting confirmation is Root Directory, framework/build/output configuration and production branch. No production update has been made.

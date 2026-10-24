@@ -26,7 +26,10 @@ try {
     process.env.AUDIT_PROXY_TRANSPORT === "1"
       ? { server: process.env.HTTPS_PROXY || process.env.https_proxy }
       : undefined;
-  const page = await browser.newPage({ proxy });
+  const page = await browser.newPage({
+    proxy,
+    storageState: process.env.PLAYWRIGHT_STORAGE_STATE,
+  });
   if (proxy)
     await page.route(`${new URL(base).origin}/**`, async (route) => {
       const response = await page.request.fetch(route.request());

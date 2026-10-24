@@ -493,7 +493,9 @@ export function InsightsPage() {
   const category = searchParams.get("category") || "All perspectives";
   const query = searchParams.get("q") || "";
   const updateFilter = (key: string, value: string) => {
-    const next = new URLSearchParams(searchParams);
+    // Navigation updates the URL before React commits the next render. Read it
+    // here so a rapid second input preserves the first filter change.
+    const next = new URLSearchParams(window.location.search);
     if (value && value !== "All perspectives") next.set(key, value);
     else next.delete(key);
     setSearchParams(next, { replace: true });
