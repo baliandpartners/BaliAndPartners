@@ -873,21 +873,27 @@ export function AboutPage() {
           <div>
             <p className="eyebrow">The founder</p>
             <h2 className="section-title">Shashwat Bali</h2>
-            <span className="founder-location">Advocate &amp; Founder · New Delhi, India</span>
+            <span className="founder-location">
+              Advocate &amp; Founder · New Delhi, India
+            </span>
           </div>
           <div className="founder-copy">
-            <h3>A perspective shaped<br />by legal practice.</h3>
+            <h3>
+              A perspective shaped
+              <br />
+              by legal practice.
+            </h3>
             <p>
-              Shashwat Bali is an advocate and the founder of Bali &amp; Partners.
-              His academic background includes legal studies at Symbiosis Law School,
-              Noida, and academic experience at Leeds Beckett University,
-              United Kingdom.
+              Shashwat Bali is an advocate and the founder of Bali &amp;
+              Partners. His academic background includes legal studies at
+              Symbiosis Law School, Noida, and academic experience at Leeds
+              Beckett University, United Kingdom.
             </p>
             <p>
               His professional experience has been shaped by working with a
               distinguished Senior Advocate, independent Advocates-on-Record,
-              full-service law firms and boutique legal practices, including
-              a Legal 500-recognised firm.
+              full-service law firms and boutique legal practices, including a
+              Legal 500-recognised firm.
             </p>
             <p>
               Over the past three years, he has undertaken legal research,
@@ -902,7 +908,8 @@ export function AboutPage() {
               communication with precision, discretion and attention to detail.
             </p>
             <Link to="/approach" className="text-link">
-              The approach behind the work <ArrowUpRight size={16} aria-hidden="true" />
+              The approach behind the work{" "}
+              <ArrowUpRight size={16} aria-hidden="true" />
             </Link>
           </div>
         </div>
@@ -1056,18 +1063,23 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
               <section>
                 <h2>2. Information you choose to provide</h2>
                 <p>
-                  The enquiry interface asks for your name, organisation
-                  (optional), email address, the nature of your enquiry and a
-                  message. Please provide only the information needed to explain
-                  your enquiry. Do not submit confidential documents, case
-                  records or sensitive personal information.
+                  The enquiry form asks for your name, organisation (optional),
+                  preferred response method, enquiry category and a brief
+                  message. Email enquiries require an email address. Callback
+                  requests require a telephone number and let you indicate a
+                  preferred time; an email address is optional. Please provide
+                  only the information needed to explain your enquiry. Do not
+                  submit confidential documents, case records or sensitive
+                  personal information.
                 </p>
                 <p>
-                  When the online form is enabled, the information submitted is
-                  transmitted securely to our Supabase-hosted enquiry database.
-                  It is used to review and respond to enquiries. If direct
-                  submission is unavailable, the interface will state this
-                  rather than indicate an enquiry has been received.
+                  With your agreement, submissions pass through our
+                  Vercel-hosted server to a private Supabase database for review
+                  and follow-up. A receipt is shown only after storage is
+                  confirmed. Your details are not stored in browser local
+                  storage. If receipt cannot be confirmed, the form keeps your
+                  details available for retry in the current page and offers
+                  direct contact options.
                 </p>
               </section>
               <section>
@@ -1080,9 +1092,14 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
                   separately.
                 </p>
                 <p>
-                  For questions about access to, retention of or deletion of
-                  correspondence you have sent us, please contact the email
-                  address above. Form enquiries may be stored securely in our database, accessible only to authorised administrators.
+                  Enquiries are accessible to authorised administrators through
+                  Supabase. New and closed requests are deleted automatically
+                  after 180 days without an update. Requests actively being
+                  handled may be kept while follow-up or an engagement
+                  continues; the team should review those records regularly.
+                  Correspondence handled outside the form may have a separate
+                  retention period. Contact the address above about access,
+                  correction or deletion.
                 </p>
               </section>
               <section>
@@ -1092,6 +1109,18 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
                   third-party analytics. Its fonts and visual assets are served
                   with the website. No optional marketing cookies are set by the
                   application.
+                </p>
+                <p>
+                  Supabase stores the submitted contact details, message,
+                  consent timestamp and request reference. The application also
+                  retains keyed hashes of a network address and contact
+                  identifier for up to 24 hours to limit abuse; raw IP addresses
+                  are not written to the enquiry database. These controls do not
+                  use advertising trackers. See{" "}
+                  <a href="https://supabase.com/privacy">
+                    Supabase’s privacy policy
+                  </a>{" "}
+                  for its processing practices.
                 </p>
                 <p>
                   The site is hosted by Vercel, which may process technical
@@ -1122,8 +1151,8 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
                 <p>
                   We may update this notice as the website and its services
                   change. The date above identifies the latest revision. Any
-                  direct form service, analytics tool or newsletter added in
-                  future will be described here before it is enabled.
+                  additional analytics tool, newsletter or change to the enquiry
+                  service will be described here before it is enabled.
                 </p>
               </section>
             </>

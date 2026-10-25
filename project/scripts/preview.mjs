@@ -4,6 +4,7 @@ import { readFile, stat } from "node:fs/promises";
 import { extname, resolve, sep } from "node:path";
 
 const root = resolve("dist");
+const { default: enquiryHandler } = await import("../api/enquiries.ts");
 const args = process.argv.slice(2);
 const option = (name, fallback) =>
   args.includes(name) ? args[args.indexOf(name) + 1] : fallback;
@@ -34,6 +35,10 @@ const mime = {
 };
 
 createServer(async (request, response) => {
+  if (new URL(request.url, "http://localhost").pathname === "/api/enquiries") {
+    await enquiryHandler(request, response);
+    return;
+  }
   for (const header of deploymentConfig.headers[0].headers)
     response.setHeader(header.key, header.value);
   response.setHeader("X-Content-Type-Options", "nosniff");
