@@ -234,13 +234,28 @@ export function ServicePage() {
               The scope, format and review process are agreed for each
               assignment.
             </p>
+            <p className="deliverables-hint">
+              Explore each area to see the work it can include.
+            </p>
           </div>
           <ul className="deliverables-list">
             {service.deliverables.map((item, index) => (
               <li key={item}>
-                <span>0{index + 1}</span>
-                <h3>{item}</h3>
-                <Plus size={18} strokeWidth={1} aria-hidden="true" />
+                <details className="deliverable-accordion">
+                  <summary>
+                    <span className="deliverable-number">0{index + 1}</span>
+                    <h3>{item}</h3>
+                    <Plus
+                      className="deliverable-toggle"
+                      size={18}
+                      strokeWidth={1.3}
+                      aria-hidden="true"
+                    />
+                  </summary>
+                  <p className="deliverable-description">
+                    {service.deliverableDetails[index]}
+                  </p>
+                </details>
               </li>
             ))}
           </ul>
