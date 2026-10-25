@@ -6,6 +6,7 @@ export interface Service {
   description: string;
   intro: string;
   deliverables: string[];
+  deliverableDetails: string[];
   audience: string;
   question: string;
   principles: { title: string; text: string }[];
@@ -36,6 +37,13 @@ export const services: Service[] = [
       "Judgment summaries and regulatory backgrounders",
       "Source mapping and research outlines",
       "Research support for long-form publications",
+    ],
+    deliverableDetails: [
+      "Focused notes that define the legal question, identify governing authorities and separate the central position from material qualifications.",
+      "Targeted review of judgments, legislation and amendments, with citations and source references organised for verification.",
+      "Clear explanations of decisions and regulatory developments, setting out the background, principal findings and relevant implications.",
+      "Structured source lists and research plans showing the foundation of an issue, unresolved points and areas for further enquiry.",
+      "Background research, issue mapping and source support for articles, guides and other substantial legal publications.",
     ],
     audience:
       "For legal professionals, publishers and in-house teams developing substantive written work.",
@@ -78,6 +86,14 @@ export const services: Service[] = [
       "Long-form manuscript development",
       "Structural editing and publication preparation",
     ],
+    deliverableDetails: [
+      "Research-led drafts organised around a defined legal issue, with a coherent argument, supporting sources and editorial review.",
+      "Reader-focused explanations of statutory provisions, rules and developments, including important conditions and qualifications.",
+      "Line-by-line review of terminology, structure and citation consistency to the level agreed in the brief.",
+      "Drafting and substantive editing in the commissioning professional’s voice, subject to their review and final approval.",
+      "Planning, chapter structure and iterative editorial development for in-depth guides, reports and manuscripts.",
+      "Final structural checks, proofreading and preparation against the agreed publishing requirements.",
+    ],
     audience:
       "For advocates, law firms, legal publishers and professional organisations with something substantive to say.",
     question: "What deserves a clearer expression?",
@@ -116,6 +132,12 @@ export const services: Service[] = [
       "Knowledge-publication concepts and outlines",
       "Interview-led author development",
       "Thematic editorial series",
+    ],
+    deliverableDetails: [
+      "Commentary developing the author’s distinctive professional position with appropriate research and nuance.",
+      "Publication themes, suggested formats and outlines designed around the audience and a genuine area of expertise.",
+      "Interview-based drafting that captures the author’s actual reasoning rather than substituting a generic viewpoint.",
+      "A connected series of articles exploring a theme over time with consistent voice and editorial direction.",
     ],
     audience:
       "For professionals and organisations seeking to share a distinctive, well-supported perspective.",
@@ -157,6 +179,13 @@ export const services: Service[] = [
       "Search-informed legal content briefs",
       "Website content structure and messaging",
     ],
+    deliverableDetails: [
+      "A considered review of existing content to identify gaps, overlap, outdated material and priorities for improvement.",
+      "Practice-specific topic clusters, formats and a realistic publishing schedule aligned with audience needs and available review capacity.",
+      "An organised content structure, internal links and a maintenance process to keep related publications useful and up to date.",
+      "Research-based writing briefs connecting audience questions and search intent with sound legal sources and a clear proposed structure.",
+      "Practice-page hierarchy, website content structure and measured messaging that makes the firm’s services understandable without inflated claims.",
+    ],
     audience:
       "For legal and professional-services teams building or refining a coherent publishing presence.",
     question: "What should your body of work be known for?",
@@ -195,6 +224,12 @@ export const services: Service[] = [
       "Professional profiles and biographies",
       "Firm narratives and professional announcements",
       "Editorial voice and communication guidance",
+    ],
+    deliverableDetails: [
+      "Editorial plans and LinkedIn posts shaped around verified expertise, professional context and the intended readership.",
+      "Biographies that present education, professional experience and areas of focus clearly and in proportion.",
+      "Firm introductions and announcements communicating genuine developments in a restrained, accurate professional voice.",
+      "Tone-of-voice principles and practical editorial standards to maintain consistency across platforms.",
     ],
     audience:
       "For legal professionals and specialist organisations seeking a more considered public voice.",
