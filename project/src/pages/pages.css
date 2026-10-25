@@ -183,7 +183,8 @@
   color: var(--muted);
   margin-bottom: 0;
 }
-.service-deliverables {
+.service-deliverables.section-space {
+  padding-block: clamp(64px, 6vw, 88px);
   background: var(--white);
   border-block: 1px solid var(--line);
 }
