@@ -68,6 +68,25 @@ for (const route of routes) {
   });
 }
 
+test("service offerings expand to explain the work", async ({ page }) => {
+  for (const service of services) {
+    expect(service.deliverableDetails).toHaveLength(service.deliverables.length);
+    await page.goto(`/expertise/${service.slug}`);
+    const accordions = page.locator(".deliverables-list details");
+    await expect(accordions).toHaveCount(service.deliverables.length);
+    const first = accordions.first();
+    await expect(first).not.toHaveAttribute("open", "");
+    await first.locator("summary").click();
+    await expect(first).toHaveAttribute("open", "");
+    await expect(first.locator(".deliverable-description")).toContainText(
+      service.deliverableDetails[0],
+    );
+    await first.locator("summary").focus();
+    await page.keyboard.press("Enter");
+    await expect(first).not.toHaveAttribute("open", "");
+  }
+});
+
 test("deployment indexing matches the intended release mode", async ({
   request,
 }) => {
