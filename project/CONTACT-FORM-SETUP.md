@@ -26,7 +26,7 @@ Never prefix these with `VITE_`, commit them, or paste them into chat. Preview c
 
 ## Request handling and privacy
 
-GET issues a short-lived signed challenge bound to the client network identifier. POST requires an approved same-origin request, JSON within 12 KB, a valid challenge, an empty honeypot, field validation and explicit consent. Requests made immediately after challenge issuance are rejected briefly. On Vercel the server uses the platform-managed client-address header, not the caller's ordinary forwarded-for header.
+GET issues a short-lived signed challenge bound to an essential HttpOnly, Secure, SameSite=Strict browser-session cookie (30 minutes). POST requires an approved same-origin request, JSON within 12 KB, a valid challenge, an empty honeypot, field validation and explicit consent. Requests made immediately after challenge issuance are rejected briefly. On Vercel the server uses the platform-managed client-address header, not the caller's ordinary forwarded-for header.
 
 The database transaction permits at most five submissions per network identifier/hour, three per contact identifier/hour and 100 overall/hour. These are modest-volume inbox limits, not a claim to stop every bot. Hashed abuse identifiers are retained for at most 24 hours; raw IP addresses are not written to these tables. Vercel may retain its own operational logs under its policies.
 

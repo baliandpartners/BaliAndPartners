@@ -1,6 +1,7 @@
 import {
   createHash,
   createHmac,
+  randomBytes,
   randomUUID,
   timingSafeEqual,
 } from "node:crypto";
@@ -78,10 +79,21 @@ export function createEnquiryHandler(dependencies: Dependencies = {}) {
     if (typeof address !== "string" || !address)
       return send(503, { error: "temporarily_unavailable" });
     const clientHash = digest(secret, `client:${address.split(",")[0].trim()}`);
+    const cookie = req.headers.cookie
+      ?.split(";")
+      .map((value) => value.trim())
+      .find((value) => value.startsWith("bp_enquiry_session="))
+      ?.slice("bp_enquiry_session=".length);
+    const session = cookie && /^[a-f0-9]{64}$/.test(cookie) ? cookie : "";
     if (req.method === "GET") {
+      const browserSession = session || randomBytes(32).toString("hex");
+      res.setHeader(
+        "Set-Cookie",
+        `bp_enquiry_session=${browserSession}; Path=/api/enquiries; HttpOnly; SameSite=Strict; Max-Age=1800${env.VERCEL || env.NODE_ENV === "production" ? "; Secure" : ""}`,
+      );
       const issued = `${now()}.${randomUUID()}`;
       return send(200, {
-        challenge: `${issued}.${digest(secret, `${issued}:${clientHash}`)}`,
+        challenge: `${issued}.${digest(secret, `${issued}:${browserSession}`)}`,
       });
     }
     if (
@@ -123,13 +135,14 @@ export function createEnquiryHandler(dependencies: Dependencies = {}) {
     const parts = challenge.split(".");
     const timestamp = Number(parts[0]);
     if (
+      !session ||
       parts.length !== 3 ||
       !UUID.test(parts[1]) ||
       !/^[a-f0-9]{64}$/.test(parts[2]) ||
       !Number.isFinite(timestamp) ||
       now() - timestamp > 30 * 60_000 ||
       timestamp > now() ||
-      !equal(parts[2], digest(secret, `${parts[0]}.${parts[1]}:${clientHash}`))
+      !equal(parts[2], digest(secret, `${parts[0]}.${parts[1]}:${session}`))
     )
       return send(400, { error: "challenge_expired" });
     if (now() - timestamp < 1000) {

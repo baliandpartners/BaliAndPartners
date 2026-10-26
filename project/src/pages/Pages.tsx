@@ -1108,7 +1108,10 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
                   This website does not include advertising trackers or
                   third-party analytics. Its fonts and visual assets are served
                   with the website. No optional marketing cookies are set by the
-                  application.
+                  application. The enquiry form uses an essential, secure
+                  session cookie lasting up to 30 minutes to validate
+                  submissions. It contains a random identifier, not your name or
+                  contact details.
                 </p>
                 <p>
                   Supabase stores the submitted contact details, message,

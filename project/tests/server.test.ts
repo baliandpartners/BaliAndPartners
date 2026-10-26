@@ -74,7 +74,15 @@ async function harness(
     "Content-Type": "application/json",
     "x-vercel-forwarded-for": "203.0.113.5",
   };
-  const get = () => fetch(url, { headers });
+  let cookie = "";
+  const get = async () => {
+    const response = await fetch(url, {
+      headers: { ...headers, Cookie: cookie },
+    });
+    const issued = response.headers.get("set-cookie");
+    if (issued) cookie = issued.split(";")[0];
+    return response;
+  };
   try {
     await run({
       url,
@@ -82,7 +90,7 @@ async function harness(
       post: (body, extra = {}) =>
         fetch(url, {
           method: "POST",
-          headers: { ...headers, ...extra },
+          headers: { ...headers, Cookie: cookie, ...extra },
           body: JSON.stringify(body),
         }),
       challenge: async () => {
@@ -136,7 +144,7 @@ test("request method, origin, content type and body size are enforced", async ()
     assert.equal(h.calls.length, 0);
   });
 });
-test("signed challenges reject tampering, expiry, honeypots and changed clients", async () => {
+test("signed challenges reject tampering, expiry, honeypots and changed sessions", async () => {
   await harness(async (h) => {
     const challenge = await h.challenge();
     const body = { ...valid, challenge, requestId: randomUUID() };
@@ -146,7 +154,8 @@ test("signed challenges reject tampering, expiry, honeypots and changed clients"
       400,
     );
     assert.equal(
-      (await h.post(body, { "x-vercel-forwarded-for": "203.0.113.6" })).status,
+      (await h.post(body, { Cookie: "bp_enquiry_session=" + "f".repeat(64) }))
+        .status,
       400,
     );
     assert.equal(
@@ -254,4 +263,27 @@ test("callback submissions permit no email and preserve phone and requested wind
     validateEnquiry({ ...valid, phone: "old callback number" }).values.phone,
     "",
   );
+});
+
+test("a valid browser session tolerates a changed network address", async () => {
+  await harness(async (h) => {
+    const body = {
+      ...valid,
+      challenge: await h.challenge(),
+      requestId: randomUUID(),
+    };
+    const response = await h.post(body, {
+      "x-vercel-forwarded-for": "203.0.113.99",
+    });
+    assert.equal(response.status, 201);
+    assert.equal(h.calls.length, 1);
+    const cookie = (await h.get()).headers.get("set-cookie")!;
+    for (const flag of [
+      "HttpOnly",
+      "SameSite=Strict",
+      "Secure",
+      "Max-Age=1800",
+    ])
+      assert.ok(cookie.includes(flag));
+  });
 });
