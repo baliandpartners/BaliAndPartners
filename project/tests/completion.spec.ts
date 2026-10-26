@@ -1,3 +1,4 @@
+import { mockEnquiryApi, fillEnquiry } from "./enquiry-mock";
 import { test, expect, configureHostedTransport } from "./fixtures";
 import {
   articles,
@@ -198,15 +199,12 @@ test("every article supports copy, selectable fallback, anchors, progress and re
   }
 });
 
-test("enquiry choices and clipboard success preserve honest draft semantics", async ({
+test("enquiry categories, callback windows and character counts remain usable", async ({
   page,
 }) => {
+  await mockEnquiryApi(page);
   await page.goto("/contact");
-  await page.getByLabel("Your name").fill("Local Test");
-  await page.getByLabel("Email address").fill("visitor@example.test");
-  await page
-    .getByLabel("A brief outline")
-    .fill("A research assignment for review.");
+  await fillEnquiry(page);
   const select = page.getByLabel("Nature of enquiry");
   for (const value of await select
     .locator("option")
@@ -214,43 +212,16 @@ test("enquiry choices and clipboard success preserve honest draft semantics", as
       nodes.map((node) => (node as HTMLOptionElement).value).filter(Boolean),
     )) {
     await select.selectOption(value);
-    await page
-      .getByRole("button", { name: "Prepare email", exact: true })
-      .click();
-    await expect(
-      page.getByRole("link", { name: "Open email draft" }),
-    ).toHaveAttribute(
-      "href",
-      new RegExp(
-        encodeURIComponent(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
-      ),
-    );
+    await expect(select).toHaveValue(value);
   }
-  await page.evaluate(() =>
-    Object.defineProperty(navigator, "clipboard", {
-      configurable: true,
-      value: {
-        writeText: async (value: string) => {
-          (window as unknown as { draft: string }).draft = value;
-        },
-      },
-    }),
-  );
-  await page.getByRole("button", { name: "Copy draft", exact: true }).click();
-  await expect(
-    page.getByRole("button", { name: "Draft copied" }),
-  ).toBeVisible();
-  expect(
-    await page.evaluate(() => (window as unknown as { draft: string }).draft),
-  ).toContain("visitor@example.test");
-  await expect(
-    page.getByText("No message has been sent yet.", { exact: false }),
-  ).toBeVisible();
-  await page.getByLabel("A brief outline").fill("Changed draft");
-  await expect(
-    page.getByRole("link", { name: "Open email draft" }),
-  ).toHaveCount(0);
+  await page.getByLabel("A brief outline").fill("Changed brief");
   await expect(page.locator(".enquiry-character-count")).toHaveText("13/1500");
+  await page.getByRole("radio", { name: "Request a callback" }).check();
+  const windows = page.getByLabel("Preferred callback time");
+  for (const value of await windows.locator("option").allTextContents()) {
+    await windows.selectOption(value);
+    await expect(windows).toHaveValue(value);
+  }
 });
 
 test("unknown slugs, malformed fragments and canonical redirects are safe", async ({

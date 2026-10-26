@@ -1,0 +1,13 @@
+# Founder and enquiry implementation — October 2026
+
+PR #2 completes the supplied founder biography and replaces draft-email enquiries with private database-backed enquiry/callback requests, preserving the existing visual identity. Portrait placement remains ready for an authentic approved image; no photograph was attached or substituted.
+
+The initial PR used public anonymous table inserts. The completed architecture routes browser requests through a same-origin Vercel function, retains service credentials exclusively on the server, revokes browser database read/write/RPC permissions, validates request origin and payloads, and enforces transaction-level idempotency and persistent quotas. It records consent, supports callback preferences, provides private administrator workflow fields and schedules retention. Success means durable database acceptance, not email delivery or a confirmed callback appointment.
+
+Key files: `project/src/components/ContactForm.tsx` (accessible form and recovery); `src/data/enquiry.ts` (shared field rules); `api/enquiries.ts` and `server/enquiries.ts` (server-only submission); `supabase/contact_submissions.sql` (private database and Cron); `src/pages/Pages.tsx` (founder and truthful privacy notice); `src/pages/Home.tsx` (supplied founder biography); `vercel.json` (same-origin CSP); `tests/enquiry.spec.ts`, `tests/server.test.ts`, `tests/database.test.ts` and updated prior tests (interaction/security/regression coverage). PGlite is a development-only PostgreSQL test dependency. Static build assets contain no database administrative credentials.
+
+A new Supabase project, Bali Partners Enquiries (`mztwwqfoyiaihktugaqb`), was created in ap-south-1 on the free plan under the existing Vercel-managed organisation. The old paused project was preserved. Database migration and retention schedule are applied. Operational instructions and owner inbox access are in [CONTACT-FORM-SETUP.md](../project/CONTACT-FORM-SETUP.md).
+
+Local validation includes 56 browser tests and 16 server/database tests. Browser form mocks are explicitly isolated from real persistence verification; the final release handoff records actual hosted submission tests, database records, public permission denial, deployment identifiers and any remaining limitations. Credentials and temporary preview-access secrets are excluded from source and reports.
+
+Hosted follow-up corrected Vercel TypeScript import rewriting and replaced network-address challenge binding with a short-lived secure browser-session cookie. Network addresses may change between legitimate requests; IP/contact quotas remain enforced independently, while the signed browser session preserves reliable retries.

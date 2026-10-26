@@ -169,30 +169,13 @@ try {
       }
     }
     if (route === "/contact") {
-      await page.getByLabel("Your name").fill("Local audit");
-      await page
-        .getByLabel(/Email address|Work email/)
-        .fill("audit@example.test");
-      await page
-        .getByLabel("Nature of enquiry")
-        .selectOption("Content strategy");
-      await page
-        .getByLabel("A brief outline")
-        .fill("Local-only audit draft; never sent.");
-      await page
-        .getByRole("button", { name: "Prepare email", exact: true })
-        .click();
-      await recordState("prepared unsent draft");
-      await page.evaluate(() =>
-        Object.defineProperty(navigator, "clipboard", {
-          value: undefined,
-          configurable: true,
-        }),
-      );
-      await page
-        .getByRole("button", { name: "Copy draft", exact: true })
-        .click();
-      await recordState("manual draft copy");
+      const name = page.getByLabel("Your name");
+      if (await name.isEnabled()) {
+        await page.getByRole("radio", { name: "Request a callback" }).check();
+        await recordState("callback fields (no submission)");
+        await page.getByRole("radio", { name: "By email" }).check();
+        await recordState("email enquiry fields (no submission)");
+      } else await recordState("enquiry availability notice");
     }
     if (route.startsWith("/insights/") && routes.includes(route)) {
       await page.evaluate(() =>
