@@ -1,5 +1,13 @@
 # Owner information register
 
+## Current release status — 26 October 2026
+
+This status supersedes the older pending-setup entries below. The owner supplied the founder biography, authorised the database enquiry/callback workflow and provided secure Supabase/Vercel access. PR #2 is merged and the real database-backed system is live; see `project/CONTACT-FORM-SETUP.md` for inbox access and retention. Email drafts are no longer the enquiry workflow. Outbound notification email is not enabled.
+
+The owner has now approved this founder image for website use: https://i.ibb.co/spmqgVfH/result-0-1.png. The workspace proxy currently blocks its host; `i.ibb.co` has been added to the saved environment network draft, pending publication. The portrait must be downloaded and verified before the existing typographic fallback can be replaced. A direct file attachment is an alternative to changing network access. No replacement or generated portrait is authorised or needed.
+
+The service accordion implementation from draft PR #3 is included in the current interaction update, with expanded descriptions for all 24 offerings and full keyboard/mobile checks.
+
 Updated 24 October 2026. Missing optional material stays unpublished. Existing content is retained where it is already supplied; no new credentials, affiliations or client claims have been invented. Enter credentials only through secure environment settings, never this file or chat.
 
 | Information / asset | Why needed | Area | Essential before launch? | Acceptable format | Current fallback | Owner action |
