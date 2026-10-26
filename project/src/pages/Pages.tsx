@@ -863,7 +863,7 @@ export function AboutPage() {
           <em>A legal perspective.</em>
         </h1>
         <div className="about-intro">
-          <FounderVisual>
+          <FounderVisual loading="eager">
             <div className="about-lettermark" aria-hidden="true">
               B<span>&amp;</span>P
             </div>
@@ -1134,8 +1134,8 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
                   retains keyed hashes of a network address and contact
                   identifier to limit abuse. Hashes older than 24 hours are
                   removed during submission processing or daily cleanup; raw IP
-                  addresses are not written to the enquiry database. These controls do not
-                  use advertising trackers. See{" "}
+                  addresses are not written to the enquiry database. These
+                  controls do not use advertising trackers. See{" "}
                   <a href="https://supabase.com/privacy">
                     Supabase’s privacy policy
                   </a>{" "}

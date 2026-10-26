@@ -1,6 +1,6 @@
 # Founder and enquiry implementation — October 2026
 
-PR #2 completes the supplied founder biography and replaces draft-email enquiries with private database-backed enquiry/callback requests, preserving the existing visual identity. Portrait placement remains ready for an authentic approved image; no photograph was attached or substituted.
+PR #2 completes the supplied founder biography and replaces draft-email enquiries with private database-backed enquiry/callback requests, preserving the existing visual identity. The owner subsequently supplied a founder photograph on 26 October; it is included on Home and About in the interaction follow-up release.
 
 The initial PR used public anonymous table inserts. The completed architecture routes browser requests through a same-origin Vercel function, retains service credentials exclusively on the server, revokes browser database read/write/RPC permissions, validates request origin and payloads, and enforces transaction-level idempotency and persistent quotas. It records consent, supports callback preferences, provides private administrator workflow fields and schedules retention. Success means durable database acceptance, not email delivery or a confirmed callback appointment.
 

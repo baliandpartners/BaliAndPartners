@@ -54,6 +54,18 @@ for (const route of routes) {
           document.fonts.check('16px "DM Sans Variable"'),
       ),
     ).toBe(true);
+    for (const img of await page.locator("img").all()) {
+      await img.scrollIntoViewIfNeeded();
+      await expect
+        .poll(() =>
+          img.evaluate(
+            (el) =>
+              (el as HTMLImageElement).complete &&
+              (el as HTMLImageElement).naturalWidth > 0,
+          ),
+        )
+        .toBe(true);
+    }
     expect(
       await page
         .locator("img")

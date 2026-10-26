@@ -4,7 +4,7 @@
 
 This status supersedes the older pending-setup entries below. The owner supplied the founder biography, authorised the database enquiry/callback workflow and provided secure Supabase/Vercel access. PR #2 is merged and the real database-backed system is live; see `project/CONTACT-FORM-SETUP.md` for inbox access and retention. Email drafts are no longer the enquiry workflow. Outbound notification email is not enabled.
 
-The owner has now approved this founder image for website use: https://i.ibb.co/spmqgVfH/result-0-1.png. The workspace proxy currently blocks its host; `i.ibb.co` has been added to the saved environment network draft, pending publication. The portrait must be downloaded and verified before the existing typographic fallback can be replaced. A direct file attachment is an alternative to changing network access. No replacement or generated portrait is authorised or needed.
+The owner has now approved this founder image for website use: https://i.ibb.co/spmqgVfH/result-0-1.png. Access is now enabled. The supplied photograph is downloaded and included on Home and About as locally served responsive WebP files. The full frame is retained; no generated portrait, retouching or background replacement was used.
 
 The service accordion implementation from draft PR #3 is included in the current interaction update, with expanded descriptions for all 24 offerings and full keyboard/mobile checks.
 

@@ -6,6 +6,7 @@ The previous service-page plus signs were decorative. All 24 service offerings n
 
 | Controls / location | Intended action | Verification |
 | --- | --- | --- |
+| Founder portrait on Home and About | Display the owner-approved photograph at the correct aspect ratio | Same-origin image loading, mobile/desktop dimensions and accessible caption/alt checks |
 | Header/footer wordmarks and navigation | Open real pages | Every internal destination checked; navigation clicks and route metadata tests |
 | Mobile navigation | Open/close, trap focus, restore focus, release scroll, navigate | Keyboard, Escape, touch and landscape tests |
 | Skip link, scroll cue, back to top | Reach actual document targets | Fragment inventory and scroll/focus assertions |
