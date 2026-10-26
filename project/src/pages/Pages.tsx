@@ -888,24 +888,39 @@ export function AboutPage() {
           <div>
             <p className="eyebrow">The founder</p>
             <h2 className="section-title">Shashwat Bali</h2>
-            <span className="founder-location">New Delhi, India</span>
+            <span className="founder-location">
+              Advocate &amp; Founder · New Delhi, India
+            </span>
           </div>
           <div className="founder-copy">
             <h3>
-              A practice centred
+              A perspective shaped
               <br />
-              on the written word.
+              by legal practice.
             </h3>
             <p>
-              Bali &amp; Partners was founded by Shashwat Bali to bring legal
-              research, editorial development and professional communication
-              into a focused specialist offering.
+              Shashwat Bali is an advocate and the founder of Bali &amp;
+              Partners. His academic background includes legal studies at
+              Symbiosis Law School, Noida, and academic experience at Leeds
+              Beckett University, United Kingdom.
             </p>
             <p>
-              Legal professionals often have the expertise to contribute and
-              limited time to research, draft and prepare work for publication.
-              The consultancy brings dedicated capacity to that process, with an
-              agreed scope, traceable sources and final client approval.
+              His professional experience has been shaped by working with a
+              distinguished Senior Advocate, independent Advocates-on-Record,
+              full-service law firms and boutique legal practices, including a
+              Legal 500-recognised firm.
+            </p>
+            <p>
+              Over the past three years, he has undertaken legal research,
+              drafting and analytical assignments through individual projects
+              and sustained professional associations with firms and chambers.
+              His exposure encompasses commercial disputes, arbitration,
+              regulatory work and complex legal documentation.
+            </p>
+            <p>
+              Bali &amp; Partners draws on that practical foundation to deliver
+              research-led legal content, editorial development and professional
+              communication with precision, discretion and attention to detail.
             </p>
             <Link to="/approach" className="text-link">
               The approach behind the work{" "}
@@ -1031,7 +1046,7 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
         <h1 className="display">
           {privacy ? "Privacy notice." : "Website terms."}
         </h1>
-        <p className="legal-draft-label">Last updated · 18 October 2026</p>
+        <p className="legal-draft-label">Last updated · 24 October 2026</p>
       </section>
       <div className="container legal-layout">
         <aside>
@@ -1063,18 +1078,23 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
               <section>
                 <h2>2. Information you choose to provide</h2>
                 <p>
-                  The enquiry interface asks for your name, organisation
-                  (optional), email address, the nature of your enquiry and a
-                  message. Please provide only the information needed to explain
-                  your enquiry. Do not submit confidential documents, case
-                  records or sensitive personal information.
+                  The enquiry form asks for your name, organisation (optional),
+                  preferred response method, enquiry category and a brief
+                  message. Email enquiries require an email address. Callback
+                  requests require a telephone number and let you indicate a
+                  preferred time; an email address is optional. Please provide
+                  only the information needed to explain your enquiry. Do not
+                  submit confidential documents, case records or sensitive
+                  personal information.
                 </p>
                 <p>
-                  The current interface prepares an email through your email
-                  application. It does not send the enquiry directly to a server
-                  or store it in the browser’s local storage. Your email
-                  provider handles the draft and any email you choose to send
-                  under its own policies.
+                  With your agreement, submissions pass through our
+                  Vercel-hosted server to a private Supabase database for review
+                  and follow-up. A receipt is shown only after storage is
+                  confirmed. Your details are not stored in browser local
+                  storage. If receipt cannot be confirmed, the form keeps your
+                  details available for retry in the current page and offers
+                  direct contact options.
                 </p>
               </section>
               <section>
@@ -1087,10 +1107,14 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
                   separately.
                 </p>
                 <p>
-                  For questions about access to, retention of or deletion of
-                  correspondence you have sent us, please contact the email
-                  address above. This website does not maintain an enquiry
-                  database.
+                  Enquiries are accessible to authorised administrators through
+                  Supabase. New and closed requests are deleted automatically
+                  after 180 days without an update. Requests actively being
+                  handled may be kept while follow-up or an engagement
+                  continues; the team should review those records regularly.
+                  Correspondence handled outside the form may have a separate
+                  retention period. Contact the address above about access,
+                  correction or deletion.
                 </p>
               </section>
               <section>
@@ -1099,7 +1123,23 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
                   This website does not include advertising trackers or
                   third-party analytics. Its fonts and visual assets are served
                   with the website. No optional marketing cookies are set by the
-                  application.
+                  application. The enquiry form uses an essential, secure
+                  session cookie lasting up to 30 minutes to validate
+                  submissions. It contains a random identifier, not your name or
+                  contact details.
+                </p>
+                <p>
+                  Supabase stores the submitted contact details, message,
+                  consent timestamp and request reference. The application also
+                  retains keyed hashes of a network address and contact
+                  identifier to limit abuse. Hashes older than 24 hours are
+                  removed during submission processing or daily cleanup; raw IP
+                  addresses are not written to the enquiry database. These controls do not
+                  use advertising trackers. See{" "}
+                  <a href="https://supabase.com/privacy">
+                    Supabase’s privacy policy
+                  </a>{" "}
+                  for its processing practices.
                 </p>
                 <p>
                   The site is hosted by Vercel, which may process technical
@@ -1130,8 +1170,8 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
                 <p>
                   We may update this notice as the website and its services
                   change. The date above identifies the latest revision. Any
-                  direct form service, analytics tool or newsletter added in
-                  future will be described here before it is enabled.
+                  additional analytics tool, newsletter or change to the enquiry
+                  service will be described here before it is enabled.
                 </p>
               </section>
             </>

@@ -321,16 +321,19 @@ export default function Home() {
               <em>thoughtful work.</em>
             </h2>
             <p>
-              Shashwat Bali founded Bali & Partners around a simple idea: legal
-              knowledge deserves careful expression.
+              Shashwat Bali brings three years of professional experience across
+              established legal chambers, leading law firms and independent
+              counsel practices.
             </p>
             <p>
-              A specialist consultancy at the intersection of research, writing
+              Educated at Symbiosis Law School, with academic experience at Leeds
+              Beckett University in the United Kingdom, his work reflects a
+              practical understanding of legal research, substantive drafting
               and professional communication.
             </p>
             <div className="founder-signature">
               <strong>Shashwat Bali</strong>
-              <span>Founder, Bali & Partners</span>
+              <span>Advocate &amp; Founder, Bali &amp; Partners</span>
             </div>
             <Link className="text-link" to="/about">
               The thinking behind the work <ArrowUpRight size={17} />

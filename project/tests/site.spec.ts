@@ -1,3 +1,4 @@
+import { mockEnquiryApi, fillEnquiry } from "./enquiry-mock";
 import { test, expect } from "./fixtures";
 import AxeBuilder from "@axe-core/playwright";
 import { articles, services } from "../src/data/content";
@@ -107,6 +108,7 @@ test("deployment indexing matches the intended release mode", async ({
 
 for (const route of ["/insights", "/contact"]) {
   test(`early input survives delayed scripts on ${route}`, async ({ page }) => {
+    const submissions = route === "/contact" ? await mockEnquiryApi(page) : [];
     let release!: () => void;
     const pending = new Promise<void>((resolve) => {
       release = resolve;
@@ -137,13 +139,15 @@ for (const route of ["/insights", "/contact"]) {
           .selectOption("Content strategy");
         await page
           .getByLabel("A brief outline")
-          .fill("An unsent draft for the delayed-script check.");
+          .fill("A test enquiry for the delayed-script check.");
+        await page.getByRole("checkbox").check();
         await page
-          .getByRole("button", { name: "Prepare email", exact: true })
+          .getByRole("button", { name: "Send enquiry", exact: true })
           .click();
         await expect(
-          page.getByRole("link", { name: "Open email draft" }),
-        ).toHaveAttribute("href", /Early%20visitor/);
+          page.getByRole("heading", { name: "Your enquiry is received." }),
+        ).toBeVisible();
+        expect(submissions[0].name).toBe("Early visitor");
       }
     } finally {
       release();
@@ -291,58 +295,29 @@ test("method controls, article filters, empty state and article navigation", asy
   );
 });
 
-test("enquiry validates and prepares a real email draft without sending or persisting", async ({
+test("enquiry validates required fields and confirms only the API receipt", async ({
   page,
 }) => {
-  const posts: string[] = [];
-  page.on("request", (r) => {
-    if (r.method() === "POST") posts.push(r.url());
-  });
+  const submissions = await mockEnquiryApi(page);
   await page.goto("/contact");
-  await page
-    .getByRole("button", { name: "Prepare email", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Send enquiry", exact: true }).click();
   await expect(page.getByRole("alert")).toContainText("highlighted fields");
   await expect(page.getByLabel("Your name")).toBeFocused();
-  await page.getByLabel("Your name").fill("Review Person");
+  await fillEnquiry(page);
   await page.getByLabel("Email address").fill("not-an-email");
-  await page
-    .getByRole("button", { name: "Prepare email", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Send enquiry", exact: true }).click();
+  await expect(page.getByText("Enter a valid email address.")).toBeVisible();
+  expect(submissions).toHaveLength(0);
+  await page.getByLabel("Email address").fill("browser@example.test");
+  await page.getByRole("button", { name: "Send enquiry", exact: true }).click();
   await expect(
-    page.getByText("Please enter a valid email address."),
+    page.getByRole("heading", { name: "Your enquiry is received." }),
   ).toBeVisible();
-  await page.getByLabel("Email address").fill("review@example.test");
-  await page.getByLabel("Nature of enquiry").selectOption("Content strategy");
-  await page
-    .getByLabel("A brief outline")
-    .fill("Please discuss an editorial plan. This is a local test.");
-  await page
-    .getByRole("button", { name: "Prepare email", exact: true })
-    .click();
-  await expect(
-    page.getByRole("heading", { name: "Your draft is prepared." }),
-  ).toBeVisible();
-  await expect(page.getByText(/No message has been sent yet/)).toBeVisible();
-  const href = await page
-    .getByRole("link", { name: "Open email draft" })
-    .getAttribute("href");
-  expect(decodeURIComponent(href!)).toContain(
-    "mailto:Shashwat@baliandpartners.in?subject=Website enquiry: Content strategy",
-  );
-  expect(decodeURIComponent(href!)).toContain("review@example.test");
-  expect(posts).toEqual([]);
+  expect(submissions).toHaveLength(1);
   expect(await page.evaluate(() => localStorage.length)).toBe(0);
-  await page.evaluate(() =>
-    Object.defineProperty(navigator, "clipboard", {
-      value: undefined,
-      configurable: true,
-    }),
-  );
-  await page.getByRole("button", { name: "Copy draft", exact: true }).click();
-  await expect(page.getByLabel("Email draft to copy")).toHaveValue(
-    /review@example.test/,
-  );
+  await expect(
+    page.getByRole("link", { name: "Open email draft" }),
+  ).toHaveCount(0);
 });
 
 test("reduced motion and keyboard skip link", async ({ page }) => {
