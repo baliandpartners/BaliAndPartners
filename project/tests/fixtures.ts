@@ -15,8 +15,9 @@ export const test = base.extend({
     await configureHostedTransport(page);
     await runTest(page);
     if (process.env.HOSTED_AUDIT_TRANSPORT === "1") {
-      await page.waitForLoadState("networkidle");
-      await page.unrouteAll({ behavior: "wait" });
+      // Navigation can abandon proxied requests; teardown must not wait for
+      // a network-idle event belonging to a document that is no longer active.
+      await page.unrouteAll({ behavior: "ignoreErrors" });
     }
   },
 });
