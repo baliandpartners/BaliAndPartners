@@ -6,6 +6,7 @@ export interface Service {
   description: string;
   intro: string;
   deliverables: string[];
+  deliverableDetails: string[];
   audience: string;
   question: string;
   principles: { title: string; text: string }[];
@@ -36,6 +37,13 @@ export const services: Service[] = [
       "Judgment summaries and regulatory backgrounders",
       "Source mapping and research outlines",
       "Research support for long-form publications",
+    ],
+    deliverableDetails: [
+      "Focused notes that define the legal question, identify governing authorities and separate the central position from material qualifications. The note brings together a concise answer, the reasoning behind it and points that need further review, within the agreed jurisdiction and date range.",
+      "Targeted review of judgments, legislation and amendments, with citations and source references organised for verification. Findings can be arranged by issue or chronology, with conflicting authorities and changes in the law flagged for the commissioning professional to assess.",
+      "Clear explanations of decisions and regulatory developments, setting out the background, principal findings and relevant implications. Each summary distinguishes the holding or operative change from commentary, so readers can see what has changed and where the original material can be checked.",
+      "Structured source lists and research plans showing the foundation of an issue, unresolved points and areas for further enquiry. An annotated outline connects proposed sections with the authorities needed to support them and makes gaps visible before drafting starts.",
+      "Background research, issue mapping and source support for articles, guides and other substantial legal publications. Research can be organised by chapter or theme, with a source register that helps authors and reviewers trace the basis of the final text.",
     ],
     audience:
       "For legal professionals, publishers and in-house teams developing substantive written work.",
@@ -78,6 +86,14 @@ export const services: Service[] = [
       "Long-form manuscript development",
       "Structural editing and publication preparation",
     ],
+    deliverableDetails: [
+      "Research-led drafts organised around a defined legal issue, with a coherent argument, supporting sources and editorial review. The agreed output may be a publication-ready article or an analysis draft for specialist review, with factual statements and interpretation kept distinct.",
+      "Reader-focused explanations of statutory provisions, rules and developments, including important conditions and qualifications. Structure, terminology and examples are tailored to the intended audience, while commencement dates, exceptions and unresolved questions remain visible.",
+      "Line-by-line review of terminology, structure and citation consistency to the level agreed in the brief. An edited draft and queries help the author resolve ambiguous wording or unsupported statements; the depth of source verification is agreed before work begins.",
+      "Drafting and substantive editing in the commissioning professional’s voice, subject to their review and final approval. Interviews, notes and supplied materials inform the draft. Attribution, confidentiality and publishing rights are settled as part of the assignment.",
+      "Planning, chapter structure and iterative editorial development for in-depth guides, reports and manuscripts. Work can include a synopsis, chapter outlines and a consistent terminology framework, with review milestones matched to the scale of the publication.",
+      "Final structural checks, proofreading and preparation against the agreed publishing requirements. Headings, cross-references, citations and formatting are reviewed together so the author or publisher receives a coherent handover for final approval.",
+    ],
     audience:
       "For advocates, law firms, legal publishers and professional organisations with something substantive to say.",
     question: "What deserves a clearer expression?",
@@ -116,6 +132,12 @@ export const services: Service[] = [
       "Knowledge-publication concepts and outlines",
       "Interview-led author development",
       "Thematic editorial series",
+    ],
+    deliverableDetails: [
+      "Commentary developing the author’s distinctive professional position with appropriate research and nuance. The process clarifies the central proposition, considers counterarguments and identifies what the piece adds to the existing discussion.",
+      "Publication themes, suggested formats and outlines designed around the audience and a genuine area of expertise. A concept note can set out the reader question, proposed argument and supporting material before the author commits to a full draft.",
+      "Interview-based drafting that captures the author’s actual reasoning rather than substituting a generic viewpoint. Structured conversations produce an agreed outline and draft, with quotations, examples and substantive positions returned to the author for verification.",
+      "A connected series of articles exploring a theme over time with consistent voice and editorial direction. A series plan gives each piece a distinct purpose, proposes a useful reading order and avoids unnecessary repetition between instalments.",
     ],
     audience:
       "For professionals and organisations seeking to share a distinctive, well-supported perspective.",
@@ -157,6 +179,13 @@ export const services: Service[] = [
       "Search-informed legal content briefs",
       "Website content structure and messaging",
     ],
+    deliverableDetails: [
+      "A considered review of existing content to identify gaps, overlap, outdated material and priorities for improvement. The resulting inventory separates material to retain, update, combine or retire, and turns the findings into an actionable sequence of editorial work.",
+      "Practice-specific topic clusters, formats and a realistic publishing schedule aligned with audience needs and available review capacity. Each planned piece has a defined reader, purpose and review owner, making it easier to sustain the programme without publishing for volume alone.",
+      "An organised content structure, internal links and a maintenance process to keep related publications useful and up to date. Work can include a taxonomy, naming conventions and review triggers so readers can navigate the collection and the team can maintain it.",
+      "Research-based writing briefs connecting audience questions and search intent with sound legal sources and a clear proposed structure. Briefs identify the scope, key questions, suggested headings and related pages, while leaving final legal analysis to the responsible reviewer.",
+      "Practice-page hierarchy, website content structure and measured messaging that makes the firm’s services understandable without inflated claims. Page outlines and copy guidance connect each service with its intended audience, the work involved and a clear next step for an appropriate enquiry.",
+    ],
     audience:
       "For legal and professional-services teams building or refining a coherent publishing presence.",
     question: "What should your body of work be known for?",
@@ -195,6 +224,12 @@ export const services: Service[] = [
       "Professional profiles and biographies",
       "Firm narratives and professional announcements",
       "Editorial voice and communication guidance",
+    ],
+    deliverableDetails: [
+      "Editorial plans and LinkedIn posts shaped around verified expertise, professional context and the intended readership. The work can include themes, draft posts and an approval calendar; publication and any required professional-conduct review remain with the account owner.",
+      "Biographies that present education, professional experience and areas of focus clearly and in proportion. Long and short versions can be prepared for a website, speaker introduction or professional profile, using only background information the individual has verified.",
+      "Firm introductions and announcements communicating genuine developments in a restrained, accurate professional voice. The message is adapted to the channel and audience, with names, roles, dates and permissions checked by the commissioning team before release.",
+      "Tone-of-voice principles and practical editorial standards to maintain consistency across platforms. A concise guide can cover terminology, style, attribution and review responsibilities, supported by examples the team can use in day-to-day writing.",
     ],
     audience:
       "For legal professionals and specialist organisations seeking a more considered public voice.",

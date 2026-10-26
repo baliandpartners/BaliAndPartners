@@ -10,7 +10,7 @@ Open https://supabase.com/dashboard/project/mztwwqfoyiaihktugaqb/editor and choo
 
 Change `status` from `new` to `in_progress` while handling a request, then `closed`. Use `internal_notes` for brief follow-up notes; avoid copying sensitive case material into this inbox. `updated_at` changes automatically. Check the inbox regularly: this release records requests but does not send email notifications or place phone calls. A requested callback time is not a confirmed appointment.
 
-The existing paused ContactForm project is untouched. An authentic founder portrait still needs to be supplied before the typographic fallback can be replaced.
+The existing paused ContactForm project is untouched. The owner-approved founder portrait is included on Home and About.
 
 ## Server configuration
 

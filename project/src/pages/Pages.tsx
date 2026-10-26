@@ -234,13 +234,28 @@ export function ServicePage() {
               The scope, format and review process are agreed for each
               assignment.
             </p>
+            <p className="deliverables-hint">
+              Explore each area to see the work it can include.
+            </p>
           </div>
           <ul className="deliverables-list">
             {service.deliverables.map((item, index) => (
               <li key={item}>
-                <span>0{index + 1}</span>
-                <h3>{item}</h3>
-                <Plus size={18} strokeWidth={1} aria-hidden="true" />
+                <details className="deliverable-accordion">
+                  <summary>
+                    <span className="deliverable-number">0{index + 1}</span>
+                    <h3>{item}</h3>
+                    <Plus
+                      className="deliverable-toggle"
+                      size={18}
+                      strokeWidth={1.3}
+                      aria-hidden="true"
+                    />
+                  </summary>
+                  <p className="deliverable-description">
+                    {service.deliverableDetails[index]}
+                  </p>
+                </details>
               </li>
             ))}
           </ul>
@@ -848,7 +863,7 @@ export function AboutPage() {
           <em>A legal perspective.</em>
         </h1>
         <div className="about-intro">
-          <FounderVisual>
+          <FounderVisual loading="eager">
             <div className="about-lettermark" aria-hidden="true">
               B<span>&amp;</span>P
             </div>
@@ -1119,8 +1134,8 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
                   retains keyed hashes of a network address and contact
                   identifier to limit abuse. Hashes older than 24 hours are
                   removed during submission processing or daily cleanup; raw IP
-                  addresses are not written to the enquiry database. These controls do not
-                  use advertising trackers. See{" "}
+                  addresses are not written to the enquiry database. These
+                  controls do not use advertising trackers. See{" "}
                   <a href="https://supabase.com/privacy">
                     Supabase’s privacy policy
                   </a>{" "}

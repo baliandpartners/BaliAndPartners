@@ -61,6 +61,11 @@ try {
     page.on("requestfailed", onRequest);
     const response = await page.goto(base + route);
     await page.evaluate(() => document.fonts.ready);
+    for (const img of await page.locator("img").all()) {
+      await img.scrollIntoViewIfNeeded();
+      await img.evaluate((element) => element.decode());
+    }
+    await page.evaluate(() => scrollTo(0, 0));
     const info = await page.evaluate(() => ({
       title: document.title,
       canonical: document
@@ -168,6 +173,14 @@ try {
         await recordState(`editorial stage: ${stage}`);
       }
     }
+    const disclosures = page.locator(
+      ".deliverable-accordion, .approach-faq details",
+    );
+    for (const disclosure of await disclosures.all()) {
+      await disclosure.locator("summary").click();
+    }
+    if (await disclosures.count())
+      await recordState("all service disclosures expanded");
     if (route === "/contact") {
       const name = page.getByLabel("Your name");
       if (await name.isEnabled()) {

@@ -221,3 +221,33 @@ test("callback and receipt accessibility at mobile and desktop widths", async ({
     ).toEqual([]);
   }
 });
+
+test("Try again restores an unavailable form and permits a confirmed submission", async ({
+  page,
+}) => {
+  let available = false;
+  await page.route("**/api/enquiries", async (route) => {
+    if (!available)
+      return route.fulfill({
+        status: 503,
+        json: { error: "temporarily_unavailable" },
+      });
+    if (route.request().method() === "GET")
+      return route.fulfill({ json: { challenge: "browser-contract-fixture" } });
+    const body = route.request().postDataJSON();
+    await route.fulfill({
+      status: 201,
+      json: { received: true, reference: body.requestId },
+    });
+  });
+  await page.goto("/contact");
+  await expect(page.getByRole("alert")).toContainText(
+    "temporarily unavailable",
+  );
+  available = true;
+  await page.getByRole("button", { name: "Try again", exact: true }).click();
+  await expect(page.getByLabel("Your name")).toBeEnabled();
+  await fillEnquiry(page);
+  await page.getByRole("button", { name: "Send enquiry", exact: true }).click();
+  await expect(page.locator(".enquiry-receipt")).toBeVisible();
+});
