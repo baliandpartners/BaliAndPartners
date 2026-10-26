@@ -1117,8 +1117,9 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
                   Supabase stores the submitted contact details, message,
                   consent timestamp and request reference. The application also
                   retains keyed hashes of a network address and contact
-                  identifier for up to 24 hours to limit abuse; raw IP addresses
-                  are not written to the enquiry database. These controls do not
+                  identifier to limit abuse. Hashes older than 24 hours are
+                  removed during submission processing or daily cleanup; raw IP
+                  addresses are not written to the enquiry database. These controls do not
                   use advertising trackers. See{" "}
                   <a href="https://supabase.com/privacy">
                     Supabase’s privacy policy
