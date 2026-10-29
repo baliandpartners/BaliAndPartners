@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.tsx";
 import "./fonts.css";
 import "./index.css";
+import "./motion/motion.css";
 
 const root = document.getElementById("root");
 if (!root) throw new Error("Application root was not found.");

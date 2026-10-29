@@ -101,6 +101,7 @@ test("reading-room filters combine, reset and survive browser back", async ({
     await page.getByRole("searchbox").fill(article.title.split(" ")[0]);
     await expect(page.locator(".insight-entry")).toHaveCount(1);
     await page.getByRole("link", { name: article.title }).click();
+    await expect(page).toHaveURL(new RegExp(`/insights/${article.slug}$`));
     await page.goBack();
     await expect(page.getByRole("searchbox")).toHaveValue(
       article.title.split(" ")[0],

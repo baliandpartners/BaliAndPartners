@@ -1,0 +1,441 @@
+/* Editorial motion: short, purposeful, and fully optional. Content stays readable without JS. */
+:root {
+  --motion-ease: cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+.header-mobile-contact {
+  display: none;
+}
+.site-header {
+  transition:
+    box-shadow 240ms ease,
+    background-color 240ms ease;
+}
+html[data-scrolled="true"] .site-header {
+  background: #f5f2e9f5;
+  box-shadow: 0 6px 26px #182c3009;
+}
+.site-progress {
+  position: absolute;
+  inset: auto 0 -1px;
+  height: 2px;
+  pointer-events: none;
+  overflow: hidden;
+}
+.site-progress span {
+  display: block;
+  height: 100%;
+  background: var(--bronze);
+  transform: scaleX(var(--page-progress, 0));
+  transform-origin: left;
+}
+.desktop-nav {
+  gap: clamp(18px, 2vw, 32px);
+}
+.desktop-nav a {
+  transition: color 180ms ease;
+}
+.desktop-nav a:hover,
+.desktop-nav a:focus-visible {
+  color: #765a34;
+}
+.desktop-nav a::after {
+  transition: transform 260ms var(--motion-ease);
+}
+
+.precision-cursor {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+.precision-cursor-ring {
+  display: block;
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  left: -13px;
+  top: -13px;
+  border: 1px solid #8b6e4360;
+  border-radius: 50%;
+  transition:
+    width 180ms ease,
+    height 180ms ease,
+    left 180ms ease,
+    top 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+.precision-cursor-ring i {
+  position: absolute;
+  background: var(--bronze);
+  opacity: 0.65;
+}
+.precision-cursor-ring i:first-child {
+  width: 5px;
+  height: 1px;
+  top: 50%;
+  left: -3px;
+}
+.precision-cursor-ring i:last-child {
+  width: 1px;
+  height: 5px;
+  top: -3px;
+  left: 50%;
+}
+.precision-cursor[data-active="true"] .precision-cursor-ring {
+  width: 44px;
+  height: 44px;
+  left: -22px;
+  top: -22px;
+  border-color: #8b6e4399;
+  background: #8b6e430a;
+}
+@media (hover: hover) and (pointer: fine) {
+  html[data-motion="on"] .precision-cursor {
+    display: block;
+  }
+  html[data-motion="on"] .precision-cursor[data-visible="true"] {
+    opacity: 1;
+  }
+}
+
+.motion-preference {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: none;
+  color: inherit;
+  padding: 8px 0;
+  font: inherit;
+  font-size: 10px;
+  min-height: 32px;
+}
+.motion-indicator {
+  width: 13px;
+  height: 13px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  position: relative;
+}
+.motion-indicator::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background: currentColor;
+  border-radius: 50%;
+  transition: transform 180ms ease;
+}
+.motion-preference[aria-pressed="true"] .motion-indicator::after {
+  transform: scale(0.3);
+}
+.motion-preference:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+@keyframes editorial-arrival {
+  from {
+    opacity: 1;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes ink-rule {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes page-leave {
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+@keyframes page-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+html[data-motion="on"] .hero-copy h1 {
+  animation: editorial-arrival 650ms var(--motion-ease) both;
+}
+html[data-motion="on"] .hero-copy > p {
+  animation: editorial-arrival 650ms 70ms var(--motion-ease) both;
+}
+html[data-motion="on"] .hero-actions {
+  animation: editorial-arrival 650ms 130ms var(--motion-ease) both;
+}
+html[data-motion="on"] .route-enter {
+  animation: editorial-arrival 320ms var(--motion-ease);
+}
+html[data-motion="on"] .document-rule {
+  transform-origin: left;
+  animation: ink-rule 900ms 180ms var(--motion-ease) both;
+}
+html[data-motion="on"] .capability-big-number {
+  animation: editorial-arrival 260ms var(--motion-ease);
+}
+html[data-motion="on"] .specimen-panel:not([hidden]) .specimen-document,
+html[data-motion="on"] details[open] .deliverable-description {
+  animation: editorial-arrival 260ms var(--motion-ease);
+}
+:root {
+  view-transition-name: none;
+}
+.page-enter {
+  view-transition-name: editorial-page;
+}
+::view-transition-old(editorial-page) {
+  animation: page-leave 180ms ease both;
+}
+::view-transition-new(editorial-page) {
+  animation: page-arrive 320ms var(--motion-ease) both;
+}
+html[data-view-transitions="true"] .route-enter {
+  animation: none;
+}
+
+.editorial-art {
+  perspective: 1000px;
+}
+.art-orbit {
+  position: absolute;
+  inset: 12% 8% 14%;
+  border: 1px solid #8f967e20;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.art-registration {
+  opacity: 0.7;
+}
+.art-trace {
+  stroke-dasharray: 180;
+  stroke-dashoffset: 0;
+}
+@keyframes register-draw {
+  from {
+    stroke-dashoffset: 180;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+html[data-motion="on"] .art-trace {
+  animation: register-draw 1.2s var(--motion-ease) both;
+}
+@media (hover: hover) and (pointer: fine) {
+  html[data-motion="on"] .art-document {
+    transform: rotate(-6deg) rotateY(calc(var(--art-x, 0) * 5deg))
+      rotateX(calc(var(--art-y, 0) * -4deg))
+      translate3d(calc(var(--art-x, 0) * 7px), calc(var(--art-y, 0) * 5px), 0);
+    transition:
+      transform 240ms var(--motion-ease),
+      box-shadow 300ms ease;
+  }
+  html[data-motion="on"] .art-focused .art-document {
+    box-shadow: -12px 20px 35px #28382e16;
+  }
+  html[data-motion="on"] .art-geometry {
+    transform: translate3d(
+      calc(var(--art-x, 0) * -5px),
+      calc(var(--art-y, 0) * -4px),
+      0
+    );
+    transition: transform 300ms var(--motion-ease);
+  }
+  html[data-motion="on"] .art-orbit {
+    transform: translate3d(
+      calc(var(--art-x, 0) * -9px),
+      calc(var(--art-y, 0) * -7px),
+      0
+    );
+    transition: transform 350ms var(--motion-ease);
+  }
+  html[data-motion="on"]
+    :is(
+      .capability-row,
+      .home-article,
+      .expertise-entry,
+      .deliverable-accordion,
+      .method-step
+    ) {
+    background-image: radial-gradient(
+      220px circle at var(--surface-x, 50%) var(--surface-y, 50%),
+      #8b6e430c,
+      transparent 75%
+    );
+    background-repeat: no-repeat;
+  }
+  html[data-motion="on"] .capability-row[data-pointer-over="true"] {
+    background-image: radial-gradient(
+      220px circle at var(--surface-x, 50%) var(--surface-y, 50%),
+      #c4cbb81a,
+      transparent 75%
+    );
+  }
+  html[data-motion="on"] .button {
+    transition:
+      transform 220ms var(--motion-ease),
+      background-color 220ms ease,
+      box-shadow 220ms ease;
+  }
+  html[data-motion="on"] .button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 16px #182c3012;
+  }
+  html[data-motion="on"]
+    :is(.button, .text-link, .header-enquiry, .header-mobile-contact)
+    svg {
+    transition: transform 220ms var(--motion-ease);
+  }
+  html[data-motion="on"]
+    :is(.button, .text-link, .header-enquiry, .header-mobile-contact):hover
+    svg {
+    transform: translate(3px, -2px);
+  }
+  html[data-motion="on"] .article-art {
+    transition: box-shadow 300ms ease;
+  }
+  html[data-motion="on"] .home-article:hover .article-art {
+    box-shadow: inset 0 0 0 1px #8b6e4366;
+  }
+  html[data-motion="on"] .article-art-letter {
+    transition: transform 420ms var(--motion-ease);
+  }
+  html[data-motion="on"] .home-article:hover .article-art-letter {
+    transform: translateY(-5px) rotate(-3deg);
+  }
+}
+@supports (interpolate-size: allow-keywords) and
+  selector(details::details-content) {
+  html[data-motion="on"] .deliverable-accordion {
+    interpolate-size: allow-keywords;
+  }
+  html[data-motion="on"] .deliverable-accordion::details-content {
+    height: 0;
+    opacity: 0;
+    overflow: clip;
+    transition:
+      height 280ms var(--motion-ease),
+      opacity 220ms ease,
+      content-visibility 280ms allow-discrete;
+  }
+  html[data-motion="on"] .deliverable-accordion[open]::details-content {
+    height: auto;
+    opacity: 1;
+  }
+}
+@media (max-width: 1100px) {
+  .header-inner {
+    gap: 24px;
+  }
+  .header-enquiry {
+    gap: 10px;
+  }
+  .desktop-nav {
+    gap: 18px;
+  }
+}
+@media (max-width: 1000px) {
+  .site-header {
+    height: 80px;
+  }
+  .header-inner {
+    gap: 16px;
+  }
+  .desktop-nav,
+  .header-enquiry {
+    display: none;
+  }
+  .menu-toggle {
+    display: grid;
+    place-items: center;
+  }
+  .header-mobile-contact {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    margin-left: auto;
+    padding-block: 12px;
+    border-bottom: 1px solid var(--bronze);
+  }
+  .header-mobile-contact.active {
+    color: #765a34;
+  }
+}
+@media (max-width: 600px) {
+  .site-header .brand-mark {
+    width: 154px;
+    height: 36px;
+  }
+  .site-header .brand-mark img {
+    width: 252px;
+    left: -47px;
+    top: -57px;
+  }
+  .header-inner {
+    gap: 8px;
+  }
+  .header-mobile-contact {
+    font-size: 11px;
+    gap: 4px;
+  }
+  .footer-bottom {
+    gap: 16px;
+    align-items: center;
+  }
+  .motion-preference {
+    font-size: 10px;
+  }
+}
+/* User preference and OS preference both win, including native view transitions. */
+html[data-motion="off"] {
+  scroll-behavior: auto;
+}
+html[data-motion="off"] *,
+html[data-motion="off"] *::before,
+html[data-motion="off"] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+html[data-motion="off"] .art-document {
+  transform: rotate(-6deg);
+}
+html[data-motion="off"] .art-geometry,
+html[data-motion="off"] .art-arch {
+  transform: none;
+}
+html[data-motion="off"]::view-transition-group(*),
+html[data-motion="off"]::view-transition-old(*),
+html[data-motion="off"]::view-transition-new(*) {
+  animation: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .precision-cursor {
+    display: none !important;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
