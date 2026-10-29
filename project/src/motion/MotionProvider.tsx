@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { startTransition, useEffect, useState, type ReactNode } from "react";
 import { MotionContext, useMotion } from "./context";
 
 const preferenceKey = "bali-motion";
@@ -17,7 +17,9 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       } catch {
         /* Storage is optional. */
       }
-      setPreference({ ready: true, allowed, reduced: query.matches });
+      startTransition(() => {
+        setPreference({ ready: true, allowed, reduced: query.matches });
+      });
     };
     update();
     query.addEventListener("change", update);
