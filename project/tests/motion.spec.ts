@@ -47,7 +47,7 @@ for (const width of [320, 768, 1000]) {
   });
 }
 
-test("fine pointer responds to controls and artwork without capturing clicks", async ({
+test("quiet cursor halo appears only on controls and preserves artwork and clicks", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -59,7 +59,7 @@ test("fine pointer responds to controls and artwork without capturing clicks", a
     .poll(() => artwork.evaluate((el) => el.style.getPropertyValue("--art-x")))
     .not.toBe("");
   const ring = page.locator(".precision-cursor");
-  await expect(ring).toHaveAttribute("data-visible", "true");
+  await expect(ring).toHaveAttribute("data-visible", "false");
   expect(await ring.evaluate((el) => getComputedStyle(el).pointerEvents)).toBe(
     "none",
   );
@@ -68,6 +68,15 @@ test("fine pointer responds to controls and artwork without capturing clicks", a
     .getByRole("link", { name: "Contact" });
   await contact.hover();
   await expect(ring).toHaveAttribute("data-active", "true");
+  await expect(ring).toHaveAttribute("data-visible", "true");
+  await expect(ring.locator("i")).toHaveCount(0);
+  const box = (await contact.boundingBox())!;
+  await page.mouse.move(box.x + box.width / 2 + 3, box.y + box.height / 2);
+  await expect
+    .poll(() =>
+      ring.evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).m41),
+    )
+    .toBeCloseTo(box.x + box.width / 2 + 3, 0);
   await contact.click();
   await expect(page.locator(".enquiry-form")).toBeVisible();
   await page.getByLabel("Your name").hover();

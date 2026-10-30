@@ -102,6 +102,9 @@ export default function MotionExperience() {
     let frame = 0;
     let x = 0,
       y = 0;
+    let displayedX = 0,
+      displayedY = 0,
+      previousTime = 0;
     let target: Element | null = null;
     let surface: HTMLElement | null = null;
     let artwork: HTMLElement | null = null;
@@ -112,11 +115,15 @@ export default function MotionExperience() {
     };
     const hide = () => {
       ring.dataset.visible = "false";
+      ring.dataset.active = "false";
+      surface?.removeAttribute("data-pointer-over");
+      surface = null;
+      previousTime = 0;
       cancelAnimationFrame(frame);
       frame = 0;
       resetArt();
     };
-    const draw = () => {
+    const draw = (time: number) => {
       frame = 0;
       if (
         !target ||
@@ -127,11 +134,30 @@ export default function MotionExperience() {
         hide();
         return;
       }
-      ring.style.transform = `translate3d(${x}px,${y}px,0)`;
-      ring.dataset.visible = "true";
-      ring.dataset.active = target.closest("a,button,summary,[role=tab]")
-        ? "true"
-        : "false";
+      const interactive = !!target.closest(
+        "a[href],button:not(:disabled),summary,[role=tab]:not(:disabled)",
+      );
+      // Keep the native pointer clean on reading surfaces. The small halo only
+      // accompanies controls, with quick, refresh-rate-independent settling.
+      if (!interactive || ring.dataset.visible !== "true") {
+        displayedX = x;
+        displayedY = y;
+      } else {
+        const delta = Math.min(32, Math.max(0, time - previousTime));
+        const ease = 1 - Math.exp(-delta / 35);
+        displayedX += (x - displayedX) * ease;
+        displayedY += (y - displayedY) * ease;
+      }
+      previousTime = time;
+      const settled = Math.hypot(x - displayedX, y - displayedY) < 0.15;
+      if (settled) {
+        displayedX = x;
+        displayedY = y;
+      }
+      ring.style.transform = `translate3d(${displayedX}px,${displayedY}px,0)`;
+      ring.dataset.visible = interactive ? "true" : "false";
+      ring.dataset.active = interactive ? "true" : "false";
+      if (interactive && !settled) frame = requestAnimationFrame(draw);
       const next = target.closest<HTMLElement>(surfaceSelector);
       if (next !== surface) {
         surface?.removeAttribute("data-pointer-over");
@@ -165,18 +191,27 @@ export default function MotionExperience() {
       }
     };
     const move = (event: PointerEvent) => {
-      if (event.pointerType !== "mouse" || !fine.matches) {
+      if (
+        event.pointerType !== "mouse" ||
+        event.buttons !== 0 ||
+        !fine.matches
+      ) {
         hide();
         return;
       }
       x = event.clientX;
       y = event.clientY;
       target = event.target instanceof Element ? event.target : null;
-      if (!frame) frame = requestAnimationFrame(draw);
+      if (!frame) {
+        previousTime = performance.now();
+        frame = requestAnimationFrame(draw);
+      }
     };
     const key = (event: KeyboardEvent) => {
       if (event.key === "Tab") hide();
     };
+    fine.addEventListener("change", hide);
+    window.addEventListener("pointerdown", hide, { passive: true });
     window.addEventListener("pointermove", move, { passive: true });
     document.documentElement.addEventListener("pointerleave", hide);
     window.addEventListener("blur", hide);
@@ -185,6 +220,8 @@ export default function MotionExperience() {
     return () => {
       hide();
       surface?.removeAttribute("data-pointer-over");
+      fine.removeEventListener("change", hide);
+      window.removeEventListener("pointerdown", hide);
       window.removeEventListener("pointermove", move);
       document.documentElement.removeEventListener("pointerleave", hide);
       window.removeEventListener("blur", hide);
@@ -286,10 +323,7 @@ export default function MotionExperience() {
       aria-hidden="true"
       data-visible="false"
     >
-      <span className="precision-cursor-ring">
-        <i />
-        <i />
-      </span>
+      <span className="precision-cursor-ring" />
     </div>
   );
 }
