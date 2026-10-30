@@ -14,6 +14,9 @@ import {
   Search,
 } from "lucide-react";
 import FounderVisual from "../components/FounderVisual";
+import { MeasurementPreference } from "../components/Measurement";
+import { enquiryTypes } from "../data/enquiry";
+import ServiceDiscovery from "../components/ServiceDiscovery";
 import ContactForm from "../components/ContactForm";
 import { useHydrated } from "../hooks/useHydrated";
 import { articles, services, readingTime, type Article } from "../data/content";
@@ -77,6 +80,12 @@ function PageCta({
 }: {
   title?: string;
 }) {
+  const { slug } = useParams();
+  const serviceIndex = services.findIndex((service) => service.slug === slug);
+  const serviceQuery =
+    serviceIndex >= 0
+      ? `&service=${encodeURIComponent(enquiryTypes[serviceIndex])}`
+      : "";
   return (
     <section className="page-cta section-space">
       <div className="container page-cta-inner">
@@ -85,6 +94,20 @@ function PageCta({
         <Link className="button button-dark" to="/contact">
           Discuss an assignment <ArrowUpRight size={17} aria-hidden="true" />
         </Link>
+        <div className="contextual-brief-links">
+          <Link
+            className="text-link"
+            to={`/contact?mode=project${serviceQuery}`}
+          >
+            Submit a project brief <ArrowUpRight size={16} />
+          </Link>
+          <Link
+            className="text-link"
+            to={`/contact?mode=project&engagement=Recurring+support${serviceQuery}`}
+          >
+            Discuss recurring support <ArrowUpRight size={16} />
+          </Link>
+        </div>
       </div>
     </section>
   );
@@ -161,6 +184,7 @@ export function ExpertisePage() {
           </Link>
         ))}
       </section>
+      <ServiceDiscovery />
       <section className="scope-section section-space">
         <div className="container scope-layout">
           <p className="eyebrow">A connected perspective</p>
@@ -358,19 +382,21 @@ export function ApproachPage() {
               id="method-detail"
               aria-live="polite"
             >
-              <span className="method-large-number" aria-hidden="true">
-                0{active + 1}
-              </span>
-              <h3>{process[active].description}</h3>
-              <p>{process[active].text}</p>
-              <ul>
-                {process[active].details.map((detail) => (
-                  <li key={detail}>
-                    <Check size={15} aria-hidden="true" />
-                    {detail}
-                  </li>
-                ))}
-              </ul>
+              <div key={active} className="method-content">
+                <span className="method-large-number" aria-hidden="true">
+                  0{active + 1}
+                </span>
+                <h3>{process[active].description}</h3>
+                <p>{process[active].text}</p>
+                <ul>
+                  {process[active].details.map((detail) => (
+                    <li key={detail}>
+                      <Check size={15} aria-hidden="true" />
+                      {detail}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -497,6 +523,15 @@ function ArticleEntry({ article, index }: { article: Article; index: number }) {
         </Link>
         <p>{article.excerpt}</p>
         <span className="sample-label">{article.label}</span>
+        {!!article.tags?.length && (
+          <div className="article-tags">
+            {article.tags.map((tag) => (
+              <Link key={tag} to={`/insights?tag=${encodeURIComponent(tag)}`}>
+                {tag}
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </article>
   );
@@ -507,6 +542,7 @@ export function InsightsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const category = searchParams.get("category") || "All perspectives";
   const query = searchParams.get("q") || "";
+  const tag = searchParams.get("tag") || "";
   const updateFilter = (key: string, value: string) => {
     // Navigation updates the URL before React commits the next render. Read it
     // here so a rapid second input preserves the first filter change.
@@ -522,7 +558,8 @@ export function InsightsPage() {
   const filtered = articles.filter(
     (article) =>
       (category === "All perspectives" || category === article.category) &&
-      `${article.title} ${article.excerpt} ${article.category}`
+      (!tag || article.tags?.includes(tag)) &&
+      `${article.title} ${article.excerpt} ${article.category} ${(article.tags || []).join(" ")}`
         .toLowerCase()
         .includes(query.trim().toLowerCase()),
   );
@@ -546,6 +583,17 @@ export function InsightsPage() {
         className="container insights-content"
         aria-labelledby="perspectives-title"
       >
+        {tag && (
+          <p>
+            Tagged: {tag}{" "}
+            <button
+              className="text-link"
+              onClick={() => updateFilter("tag", "")}
+            >
+              Clear tag filter
+            </button>
+          </p>
+        )}
         <div className="sample-notice">
           <span className="sample-notice-mark" aria-hidden="true">
             i
@@ -697,6 +745,15 @@ export function ArticlePage() {
           <span>{article.category}</span>
           <span>{readingTime(article)}</span>
           <span className="sample-label">{article.label}</span>
+          {!!article.tags?.length && (
+            <div className="article-tags">
+              {article.tags.map((tag) => (
+                <Link key={tag} to={`/insights?tag=${encodeURIComponent(tag)}`}>
+                  {tag}
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
         <h1>{article.title}</h1>
         <p className="article-standfirst">{article.standfirst}</p>
@@ -707,6 +764,13 @@ export function ArticlePage() {
             <br />
             Published{" "}
             <time dateTime={article.publishedAt}>{article.publishedAt}</time>
+            {article.updatedAt && (
+              <>
+                {" "}
+                · Updated{" "}
+                <time dateTime={article.updatedAt}>{article.updatedAt}</time>
+              </>
+            )}
             {article.reviewedAt && (
               <>
                 {" "}
@@ -1046,7 +1110,9 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
         <h1 className="display">
           {privacy ? "Privacy notice." : "Website terms."}
         </h1>
-        <p className="legal-draft-label">Last updated · 24 October 2026</p>
+        <p className="legal-draft-label">
+          Last updated · {privacy ? "30" : "24"} October 2026
+        </p>
       </section>
       <div className="container legal-layout">
         <aside>
@@ -1080,7 +1146,9 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
                 <p>
                   The enquiry form asks for your name, organisation (optional),
                   preferred response method, enquiry category and a brief
-                  message. Email enquiries require an email address. Callback
+                  message. Project briefs also include professional category,
+                  scope, assignment type, anticipated volume and requested
+                  timeline. Email enquiries require an email address. Callback
                   requests require a telephone number and let you indicate a
                   preferred time; an email address is optional. Please provide
                   only the information needed to explain your enquiry. Do not
@@ -1119,6 +1187,7 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
               </section>
               <section>
                 <h2>4. Browsing and technical services</h2>
+                <MeasurementPreference />
                 <p>
                   This website does not include advertising trackers or
                   third-party analytics. Its fonts and visual assets are served

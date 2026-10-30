@@ -2,6 +2,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { ArrowDown, ArrowRight, ArrowUpRight, Menu, X } from "lucide-react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useHydrated } from "../hooks/useHydrated";
+import Measurement from "./Measurement";
 import MotionProvider, { MotionToggle } from "../motion/MotionProvider";
 import MotionExperience from "../motion/MotionExperience";
 import { applyPageMetadata } from "../data/metadata";
@@ -270,6 +271,7 @@ export default function SiteLayout() {
         <Header />
         <RouteEffects />
         <MotionExperience />
+        <Measurement />
         <main id="main-content" tabIndex={-1}>
           <div
             key={pathname}

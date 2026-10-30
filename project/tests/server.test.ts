@@ -287,3 +287,50 @@ test("a valid browser session tolerates a changed network address", async () => 
       assert.ok(cookie.includes(flag));
   });
 });
+
+test("project briefs are independently validated and included in the private payload", async () => {
+  const projectBrief = {
+    profession: "Law firm",
+    scope: "A defined document or question",
+    engagement: "One-off assignment",
+    volume: "One piece or research note",
+    timeline: "Within a month",
+  };
+  await harness(async (h) => {
+    const challenge = await h.challenge();
+    for (const bad of [
+      null,
+      {},
+      { ...projectBrief, timeline: "Tomorrow guaranteed" },
+      { ...projectBrief, secret: "extra" },
+    ]) {
+      assert.equal(
+        (
+          await h.post({
+            ...valid,
+            projectBrief: bad,
+            challenge,
+            requestId: randomUUID(),
+          })
+        ).status,
+        422,
+      );
+    }
+    assert.equal(h.calls.length, 0);
+    assert.equal(
+      (
+        await h.post({
+          ...valid,
+          projectBrief,
+          challenge,
+          requestId: randomUUID(),
+        })
+      ).status,
+      201,
+    );
+    assert.deepEqual(
+      (h.calls[0].p_payload as Record<string, unknown>).projectBrief,
+      projectBrief,
+    );
+  });
+});

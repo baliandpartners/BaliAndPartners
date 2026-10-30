@@ -3,6 +3,9 @@ import { ArrowUpRight, CornerDownRight, RotateCcw } from "lucide-react";
 import "./interactive.css";
 import { useHydrated } from "../hooks/useHydrated";
 
+import { demonstrations } from "../data/demonstrations";
+import "./business.css";
+
 const stages = [
   {
     name: "Source",
@@ -36,6 +39,8 @@ const stages = [
 export default function EditorialSpecimen() {
   const hydrated = useHydrated();
   const [active, setActive] = useState(0);
+  const [subject, setSubject] = useState(-1);
+  const example = demonstrations[subject];
   const id = useId();
   const tabs = useRef<Array<HTMLButtonElement | null>>([]);
 
@@ -57,6 +62,24 @@ export default function EditorialSpecimen() {
 
   return (
     <div className="editorial-specimen">
+      <label className="specimen-subject">
+        <span>Explore an editorial study</span>
+        <select
+          disabled={!hydrated}
+          value={subject}
+          onChange={(e) => {
+            setSubject(Number(e.target.value));
+            setActive(0);
+          }}
+        >
+          <option value={-1}>Lease renewal · original study</option>
+          {demonstrations.map((item, index) => (
+            <option key={item.name} value={index}>
+              {item.name}
+            </option>
+          ))}
+        </select>
+      </label>
       <div
         className="specimen-tabs"
         role="tablist"
@@ -100,12 +123,24 @@ export default function EditorialSpecimen() {
         >
           <div className="specimen-document">
             <div className="specimen-document-topline">
-              <span>Editorial study / 001</span>
-              <span>Lease renewal</span>
+              <span>
+                Editorial study / {String(subject + 2).padStart(3, "0")}
+              </span>
+              <span>{example?.name || "Lease renewal"}</span>
             </div>
-            <h3>{stage.heading}</h3>
+            <h3>{example?.heading[index] || stage.heading}</h3>
+            {example && (
+              <div className="specimen-alternative">
+                <span className="specimen-clause-label">
+                  Fictional demonstration · not client work or legal advice
+                </span>
+                <p className={index === 2 ? "specimen-clear-lead" : ""}>
+                  {example.copy[index]}
+                </p>
+              </div>
+            )}
 
-            {index === 0 && (
+            {!example && index === 0 && (
               <div className="specimen-source-copy">
                 <span className="specimen-clause-label">
                   Fictional clause · renewal option
@@ -130,7 +165,7 @@ export default function EditorialSpecimen() {
               </div>
             )}
 
-            {index === 1 && (
+            {!example && index === 1 && (
               <dl className="specimen-outline">
                 <div>
                   <dt>
@@ -163,7 +198,7 @@ export default function EditorialSpecimen() {
               </dl>
             )}
 
-            {index === 2 && (
+            {!example && index === 2 && (
               <div className="specimen-clear-copy">
                 <span className="specimen-clause-label">
                   A reader-focused explanation
@@ -191,7 +226,15 @@ export default function EditorialSpecimen() {
             )}
 
             <div className="specimen-document-bottomline">
-              <span>{stage.note}</span>
+              <span>
+                {example
+                  ? [
+                      "Separate the question, evidence and assumptions.",
+                      "Give the material a clear hierarchy.",
+                      "A qualified, reader-focused expression.",
+                    ][index]
+                  : stage.note}
+              </span>
               <span aria-hidden="true">0{index + 1} / 03</span>
             </div>
           </div>
@@ -207,7 +250,7 @@ export default function EditorialSpecimen() {
               {index === 0 ? "¶" : index === 1 ? "§" : "Aa"}
             </span>
             <h4>{stage.annotation}</h4>
-            <p>{stage.detail}</p>
+            <p>{example?.reasoning[index] || stage.detail}</p>
             {index < stages.length - 1 ? (
               <button
                 type="button"
@@ -240,8 +283,9 @@ export default function EditorialSpecimen() {
 
       <p className="specimen-disclaimer">
         A fictional editorial demonstration, not client work or legal advice.
-        Actual notice requirements depend on the complete agreement and
-        applicable law.
+        {example
+          ? " These invented materials cite no real case or authority. Actual assignments require verified sources and substantive review."
+          : " Actual notice requirements depend on the complete agreement and applicable law."}
       </p>
     </div>
   );

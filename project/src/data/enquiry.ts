@@ -1,3 +1,4 @@
+import { validBrief, type ProjectBrief } from "./brief.ts";
 export const enquiryTypes = [
   "Legal research & analysis",
   "Legal content & editorial",
@@ -23,6 +24,7 @@ export type EnquiryValues = {
   nature: string;
   message: string;
   consent: boolean;
+  projectBrief?: ProjectBrief;
 };
 export type EnquiryErrors = Partial<Record<keyof EnquiryValues, string>>;
 export const emptyEnquiry: EnquiryValues = {
@@ -61,6 +63,12 @@ export function validateEnquiry(input: unknown): {
     consent: data.consent === true,
   };
   const errors: EnquiryErrors = {};
+  if (data.projectBrief !== undefined) {
+    if (validBrief(data.projectBrief)) values.projectBrief = data.projectBrief;
+    else
+      errors.projectBrief =
+        "Complete all five project details using the available options.";
+  }
   if (!values.name || values.name.length > 100)
     errors.name = "Enter your name (up to 100 characters).";
   if (values.organisation.length > 120)

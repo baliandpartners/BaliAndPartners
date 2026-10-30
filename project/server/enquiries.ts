@@ -154,7 +154,7 @@ export function createEnquiryHandler(dependencies: Dependencies = {}) {
     const { values, errors } = validateEnquiry(input);
     if (Object.keys(errors).length)
       return send(422, { error: "validation_failed", fields: errors });
-    const payload = { ...values, privacyVersion: "2026-10-24" };
+    const payload = { ...values, privacyVersion: "2026-10-30" };
     const payloadHash = createHash("sha256")
       .update(JSON.stringify(payload))
       .digest("hex");

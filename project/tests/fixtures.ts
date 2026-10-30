@@ -13,6 +13,10 @@ export async function configureHostedTransport(page: Page) {
 export const test = base.extend({
   page: async ({ page }, runTest) => {
     await configureHostedTransport(page);
+    // Browser contract tests must not inflate live aggregate measurements.
+    await page.route("**/api/metrics", (route) =>
+      route.fulfill({ status: 204 }),
+    );
     await runTest(page);
     if (process.env.HOSTED_AUDIT_TRANSPORT === "1") {
       // Navigation can abandon proxied requests; teardown must not wait for
