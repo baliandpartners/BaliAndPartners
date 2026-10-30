@@ -31,6 +31,12 @@ test("PostgreSQL schema enforces private access, atomic quotas, retries and work
     // PGlite runs PostgreSQL locally but has no scheduler; production pg_cron is verified separately.
     const core = source.split("-- Supabase supports pg_cron;")[0] + "\ncommit;";
     await db.exec(core);
+    await db.exec(
+      await readFile(
+        new URL("../supabase/phase_two.sql", import.meta.url),
+        "utf8",
+      ),
+    );
     const submit = async (
       id: string,
       data = payload,
@@ -46,6 +52,128 @@ test("PostgreSQL schema enforces private access, atomic quotas, retries and work
       );
       return result.rows[0].result;
     };
+    await t.test(
+      "project brief constraints and editorial review cannot be bypassed",
+      async () => {
+        const brief = {
+          profession: "Law firm",
+          scope: "A defined document or question",
+          engagement: "One-off assignment",
+          volume: "One piece or research note",
+          timeline: "Within a month",
+        };
+        const id = randomUUID();
+        assert.equal(
+          (
+            await submit(
+              id,
+              { ...payload, projectBrief: brief } as typeof payload,
+              hash("7"),
+              hash("8"),
+            )
+          ).status,
+          "saved",
+        );
+        const saved = await db.query<{ project_brief: unknown }>(
+          "select project_brief from public.contact_submissions where id=$1",
+          [id],
+        );
+        assert.deepEqual(saved.rows[0].project_brief, brief);
+        for (const bad of [
+          { ...brief, timeline: null },
+          { ...brief, volume: "unlimited" },
+          { ...brief, extra: "secret" },
+        ]) {
+          await assert.rejects(
+            submit(
+              randomUUID(),
+              { ...payload, projectBrief: bad } as typeof payload,
+              hash("7"),
+              hash("8"),
+            ),
+            /check constraint/,
+          );
+        }
+        await db.query(
+          "delete from public.enquiry_rate_events where request_id=$1",
+          [id],
+        );
+        await db.query("delete from public.contact_submissions where id=$1", [
+          id,
+        ]);
+        await assert.rejects(
+          db.exec(
+            "insert into public.publication_records(editorial_owner,status,reviewed_by,reviewed_at,rights_confirmed) values('Editor','published','Reviewer',now(),true)",
+          ),
+          /check constraint/,
+        );
+        const publication = await db.query<{ id: string }>(
+          `insert into public.publication_records(editorial_owner,status,reviewed_by,reviewed_at,rights_confirmed,document) values('Editor','published','Reviewer',now(),true,'{"kind":"publication","approved":true}') returning id`,
+        );
+        await db.query(
+          'update public.publication_records set document=document || \'{"title":"Changed"}\'::jsonb where id=$1',
+          [publication.rows[0].id],
+        );
+        const row = await db.query<{
+          status: string;
+          rights_confirmed: boolean;
+          reviewed_by: string | null;
+        }>(
+          "select status,rights_confirmed,reviewed_by from public.publication_records where id=$1",
+          [publication.rows[0].id],
+        );
+        assert.deepEqual(row.rows[0], {
+          status: "in_review",
+          rights_confirmed: false,
+          reviewed_by: null,
+        });
+      },
+    );
+    await t.test(
+      "anonymous roles cannot access publishing or metrics; aggregate RPC has a bounded vocabulary",
+      async () => {
+        for (const role of ["anon", "authenticated"]) {
+          await db.exec(`set role ${role}`);
+          for (const table of [
+            "publication_records",
+            "website_metrics_daily",
+          ]) {
+            await assert.rejects(
+              db.exec(`select * from public.${table}`),
+              /permission denied/,
+            );
+            await assert.rejects(
+              db.exec(`delete from public.${table}`),
+              /permission denied/,
+            );
+          }
+          await assert.rejects(
+            db.exec("select public.record_website_metric('page_view','/')"),
+            /permission denied/,
+          );
+          await db.exec("reset role");
+        }
+        await db.exec("set role service_role");
+        await db.exec(
+          "select public.record_website_metric('page_view','/'); select public.record_website_metric('page_view','/')",
+        );
+        await assert.rejects(
+          db.exec("select public.record_website_metric('personal email','/')"),
+          /Invalid measurement/,
+        );
+        await assert.rejects(
+          db.exec(
+            "select public.record_website_metric('page_view','/contact?email=private')",
+          ),
+          /Invalid measurement/,
+        );
+        const counts = await db.query<{ count: number }>(
+          "select count::int from public.website_metrics_daily where route='/' and event='page_view'",
+        );
+        assert.equal(counts.rows[0].count, 2);
+        await db.exec("reset role");
+      },
+    );
     await t.test(
       "anon and authenticated cannot select, insert, update, delete or invoke the RPC",
       async () => {

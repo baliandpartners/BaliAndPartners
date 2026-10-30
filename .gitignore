@@ -11,3 +11,5 @@
 **/.env.*
 !**/.env.example
 .DS_Store
+
+project/src/data/publications.generated.json

@@ -1,0 +1,124 @@
+.service-discovery {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 6vw, 100px);
+  border-top: 1px solid var(--line);
+  scroll-margin-top: 120px;
+}
+.discovery-form {
+  display: grid;
+  gap: 22px;
+}
+.discovery-number {
+  color: #765a34;
+  font-size: 11px;
+  margin-right: 10px;
+}
+.discovery-form select,
+.project-brief select,
+.specimen-subject select {
+  width: 100%;
+  padding: 14px 12px;
+  border: 1px solid #b5b6aa;
+  border-radius: 0;
+  background: #faf8f1;
+  color: #233d39;
+  font: inherit;
+}
+.discovery-result {
+  border-left: 2px solid #87704b;
+  padding: 12px 0 12px 24px;
+}
+.discovery-result h3 {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  margin: 12px 0;
+}
+.discovery-result p {
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+.discovery-result .text-link {
+  display: flex;
+  width: fit-content;
+  margin-top: 16px;
+}
+.project-brief {
+  margin: 24px 0;
+  padding: 24px;
+  border: 1px solid #b5b6aa;
+  display: grid;
+  gap: 20px;
+}
+.project-brief legend {
+  padding: 0 8px;
+  font-weight: 500;
+}
+.project-brief .enquiry-field {
+  margin: 0;
+}
+.specimen-subject {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 20px 24px;
+  border-bottom: 1px solid #b5b6aa;
+}
+.specimen-subject select {
+  max-width: 340px;
+}
+.specimen-alternative p {
+  margin: 18px 0;
+  line-height: 1.8;
+}
+.specimen-alternative .specimen-clear-lead {
+  font-size: 24px;
+}
+.contextual-brief-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 24px;
+}
+.article-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+.article-tags a {
+  border: 1px solid #b5b6aa;
+  padding: 5px 10px;
+  font-size: 12px;
+}
+@media (max-width: 700px) {
+  .service-discovery {
+    grid-template-columns: 1fr;
+  }
+  .project-brief {
+    padding: 16px;
+  }
+  .specimen-subject {
+    display: grid;
+    gap: 10px;
+  }
+  .specimen-subject select {
+    max-width: 100%;
+  }
+}
+html[data-motion="on"] .method-content {
+  animation: method-arrive 280ms ease-out both;
+}
+@keyframes method-arrive {
+  from {
+    transform: translateY(7px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-motion="on"] .method-content {
+    animation: none;
+  }
+}

@@ -1,3 +1,4 @@
+import { measure } from "../data/measure";
 import {
   useEffect,
   useId,
@@ -18,6 +19,13 @@ import {
   type EnquiryValues,
 } from "../data/enquiry";
 import "./interactive.css";
+import "./business.css";
+import {
+  briefOptions,
+  briefLabels,
+  emptyBrief,
+  type BriefField,
+} from "../data/brief";
 
 const contactEmail = "Shashwat@baliandpartners.in";
 const referencePattern =
@@ -63,6 +71,25 @@ export default function ContactForm() {
       if (!signal?.aborted) setAvailability("unavailable");
     }
   }
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("mode") !== "project") return;
+    measure("brief_start");
+    const brief = { ...emptyBrief };
+    for (const key of Object.keys(briefOptions) as BriefField[]) {
+      const value = params.get(key);
+      if (value && (briefOptions[key] as readonly string[]).includes(value))
+        brief[key] = value;
+    }
+    const service = params.get("service") || "";
+    setValues((previous) => ({
+      ...previous,
+      projectBrief: brief,
+      nature: (enquiryTypes as readonly string[]).includes(service)
+        ? service
+        : previous.nature,
+    }));
+  }, []);
   useEffect(() => {
     const controller = new AbortController();
     void prepare(controller.signal);
@@ -146,6 +173,13 @@ export default function ContactForm() {
         result.reference !== request.current!.id
       )
         throw new Error("Unconfirmed");
+      measure(
+        validation.values.projectBrief
+          ? "brief_received"
+          : validation.values.contactPreference === "callback"
+            ? "callback_received"
+            : "enquiry_received",
+      );
       setReceipt({
         reference: result.reference,
         callback: validation.values.contactPreference === "callback",
@@ -247,6 +281,80 @@ export default function ContactForm() {
           >
             <fieldset className="enquiry-fields" disabled={disabled}>
               <legend className="sr-only">Enquiry details</legend>
+              <fieldset className="enquiry-preference">
+                <legend>What would you like to send?</legend>
+                <label>
+                  <input
+                    type="radio"
+                    name="brief-mode"
+                    checked={!values.projectBrief}
+                    onChange={() => {
+                      setValues((previous) => {
+                        const next = { ...previous };
+                        delete next.projectBrief;
+                        return next;
+                      });
+                      setErrors({});
+                    }}
+                  />{" "}
+                  General enquiry
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="brief-mode"
+                    checked={!!values.projectBrief}
+                    onChange={() =>
+                      setValues((previous) => ({
+                        ...previous,
+                        projectBrief: { ...emptyBrief },
+                      }))
+                    }
+                  />{" "}
+                  Project brief
+                </label>
+              </fieldset>
+              {values.projectBrief && (
+                <fieldset
+                  className="project-brief"
+                  aria-describedby={described("projectBrief")}
+                >
+                  <legend>Shape the assignment</legend>
+                  {(Object.keys(briefOptions) as BriefField[]).map((field) => (
+                    <label key={field} className="enquiry-field">
+                      <span>{briefLabels[field]} (required)</span>
+                      <select
+                        name={field === "profession" ? "projectBrief" : field}
+                        required
+                        value={values.projectBrief![field]}
+                        aria-invalid={!!errors.projectBrief}
+                        onChange={(e) => {
+                          const next = {
+                            ...values,
+                            projectBrief: {
+                              ...values.projectBrief!,
+                              [field]: e.target.value,
+                            },
+                          };
+                          setValues(next);
+                          if (attempted)
+                            setErrors(validateEnquiry(next).errors);
+                        }}
+                      >
+                        <option value="">Select an option</option>
+                        {briefOptions[field].map((option) => (
+                          <option key={option}>{option}</option>
+                        ))}
+                      </select>
+                    </label>
+                  ))}
+                  <p>
+                    Share only a non-confidential outline. Timing and volume are
+                    requests for discussion, not confirmed commitments.
+                  </p>
+                  {fieldError("projectBrief")}
+                </fieldset>
+              )}
               <fieldset className="enquiry-preference">
                 <legend>How should we respond?</legend>
                 <label>
