@@ -57,44 +57,18 @@ html[data-scrolled="true"] .site-header {
 .precision-cursor-ring {
   display: block;
   position: absolute;
-  width: 26px;
-  height: 26px;
-  left: -13px;
-  top: -13px;
-  border: 1px solid #8b6e4360;
+  width: 28px;
+  height: 28px;
+  left: -14px;
+  top: -14px;
+  border: 1px solid #8b6e4340;
   border-radius: 50%;
-  transition:
-    width 180ms ease,
-    height 180ms ease,
-    left 180ms ease,
-    top 180ms ease,
-    border-color 180ms ease,
-    background-color 180ms ease;
+  background: #8b6e4306;
+  transform: scale(0.82);
+  transition: transform 180ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
-.precision-cursor-ring i {
-  position: absolute;
-  background: var(--bronze);
-  opacity: 0.65;
-}
-.precision-cursor-ring i:first-child {
-  width: 5px;
-  height: 1px;
-  top: 50%;
-  left: -3px;
-}
-.precision-cursor-ring i:last-child {
-  width: 1px;
-  height: 5px;
-  top: -3px;
-  left: 50%;
-}
-.precision-cursor[data-active="true"] .precision-cursor-ring {
-  width: 44px;
-  height: 44px;
-  left: -22px;
-  top: -22px;
-  border-color: #8b6e4399;
-  background: #8b6e430a;
+.precision-cursor[data-visible="true"] .precision-cursor-ring {
+  transform: scale(1);
 }
 @media (hover: hover) and (pointer: fine) {
   html[data-motion="on"] .precision-cursor {
