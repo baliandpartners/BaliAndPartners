@@ -137,7 +137,7 @@ export default function Home() {
           <div className="expertise-composition">
             <div className="capability-aside">
               <div className="capability-visual" aria-hidden="true">
-                <span className="capability-big-number">
+                <span key={activeService} className="capability-big-number">
                   0{activeService + 1}
                 </span>
                 <div className={`capability-lines variation-${activeService}`}>
@@ -326,9 +326,9 @@ export default function Home() {
               counsel practices.
             </p>
             <p>
-              Educated at Symbiosis Law School, with academic experience at Leeds
-              Beckett University in the United Kingdom, his work reflects a
-              practical understanding of legal research, substantive drafting
+              Educated at Symbiosis Law School, with academic experience at
+              Leeds Beckett University in the United Kingdom, his work reflects
+              a practical understanding of legal research, substantive drafting
               and professional communication.
             </p>
             <div className="founder-signature">

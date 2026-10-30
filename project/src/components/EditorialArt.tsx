@@ -9,6 +9,7 @@ export default function EditorialArt() {
       onPointerLeave={() => setFocus(false)}
       aria-hidden="true"
     >
+      <div className="art-orbit" />
       <svg className="art-geometry" viewBox="0 0 500 570" fill="none">
         <defs>
           <pattern
@@ -62,6 +63,12 @@ export default function EditorialArt() {
           stroke="currentColor"
           strokeWidth=".6"
         />
+        <g className="art-registration" stroke="currentColor" strokeWidth=".7">
+          <path d="M40 135h16m-8-8v16M444 300h16m-8-8v16M73 455h16m-8-8v16" />
+          <circle cx="48" cy="135" r="17" strokeDasharray="1 5" />
+          <circle cx="452" cy="300" r="17" strokeDasharray="1 5" />
+          <path className="art-trace" d="M48 155v80l34 20M452 320v100l-35 35" />
+        </g>
         <text
           x="250"
           y="523"

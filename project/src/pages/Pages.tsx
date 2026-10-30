@@ -1126,7 +1126,9 @@ function LegalDocument({ type }: { type: "privacy" | "terms" }) {
                   application. The enquiry form uses an essential, secure
                   session cookie lasting up to 30 minutes to validate
                   submissions. It contains a random identifier, not your name or
-                  contact details.
+                  contact details. Your visual-motion preference is saved in
+                  this browser when you use the footer motion control; it is not
+                  sent to our enquiry database.
                 </p>
                 <p>
                   Supabase stores the submitted contact details, message,

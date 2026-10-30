@@ -2,12 +2,15 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { ArrowDown, ArrowRight, ArrowUpRight, Menu, X } from "lucide-react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useHydrated } from "../hooks/useHydrated";
+import MotionProvider, { MotionToggle } from "../motion/MotionProvider";
+import MotionExperience from "../motion/MotionExperience";
 import { applyPageMetadata } from "../data/metadata";
 const navigation = [
   ["Expertise", "/expertise"],
   ["Our approach", "/approach"],
   ["Insights", "/insights"],
   ["About", "/about"],
+  ["Contact", "/contact"],
 ] as const;
 
 export function Brand({ light = false }: { light?: boolean }) {
@@ -64,6 +67,9 @@ function Header() {
           <Link className="header-enquiry" to="/contact">
             Start a conversation <ArrowUpRight size={17} />
           </Link>
+          <NavLink className="header-mobile-contact" to="/contact">
+            Contact <ArrowUpRight size={14} aria-hidden="true" />
+          </NavLink>
           <button
             disabled={!hydrated}
             ref={toggle}
@@ -76,6 +82,9 @@ function Header() {
           >
             <Menu size={23} />
           </button>
+        </div>
+        <div className="site-progress" aria-hidden="true">
+          <span />
         </div>
       </header>
       <dialog
@@ -123,20 +132,18 @@ function Header() {
           </button>
         </div>
         <nav aria-label="Expanded navigation">
-          {[["Home", "/"], ...navigation, ["Contact", "/contact"]].map(
-            ([label, href], i) => (
-              <Link
-                onClick={() => setOpen(false)}
-                aria-current={location.pathname === href ? "page" : undefined}
-                key={href}
-                to={href}
-              >
-                <span className="menu-index">0{i + 1}</span>
-                {label}
-                <ArrowUpRight />
-              </Link>
-            ),
-          )}
+          {[["Home", "/"], ...navigation].map(([label, href], i) => (
+            <Link
+              onClick={() => setOpen(false)}
+              aria-current={location.pathname === href ? "page" : undefined}
+              key={href}
+              to={href}
+            >
+              <span className="menu-index">0{i + 1}</span>
+              {label}
+              <ArrowUpRight />
+            </Link>
+          ))}
         </nav>
         <div className="menu-bottom">
           <span>Legal substance. Editorial precision.</span>
@@ -195,7 +202,6 @@ function Footer() {
                 {label}
               </Link>
             ))}
-            <Link to="/contact">Contact</Link>
           </div>
           <div className="footer-contact">
             <p className="eyebrow">Get in touch</p>
@@ -216,9 +222,7 @@ function Footer() {
         </div>
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} Bali & Partners</span>
-          <span className="footer-description">
-            Legal content & strategy consultancy
-          </span>
+          <MotionToggle />
           <div>
             <Link to="/privacy">Privacy</Link>
             <Link to="/terms">Website terms</Link>
@@ -246,7 +250,7 @@ function RouteEffects() {
         document.getElementById(id)?.scrollIntoView(),
       );
     } else if (previousPath.current !== pathname) {
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
       document.getElementById("main-content")?.focus({ preventScroll: true });
     }
     previousPath.current = pathname;
@@ -258,33 +262,36 @@ export default function SiteLayout() {
   const { pathname } = useLocation();
   const initialPath = useRef(pathname);
   return (
-    <div id="top">
-      <a href="#main-content" className="skip-link">
-        Skip to content <ArrowRight size={16} />
-      </a>
-      <Header />
-      <RouteEffects />
-      <main id="main-content" tabIndex={-1}>
-        <div
-          key={pathname}
-          className={
-            pathname === initialPath.current
-              ? "page-enter"
-              : "page-enter route-enter"
-          }
-        >
-          <Suspense
-            fallback={
-              <p className="container route-loading" role="status">
-                Opening the page…
-              </p>
+    <MotionProvider>
+      <div id="top">
+        <a href="#main-content" className="skip-link">
+          Skip to content <ArrowRight size={16} />
+        </a>
+        <Header />
+        <RouteEffects />
+        <MotionExperience />
+        <main id="main-content" tabIndex={-1}>
+          <div
+            key={pathname}
+            className={
+              pathname === initialPath.current
+                ? "page-enter"
+                : "page-enter route-enter"
             }
           >
-            <Outlet />
-          </Suspense>
-        </div>
-      </main>
-      <Footer />
-    </div>
+            <Suspense
+              fallback={
+                <p className="container route-loading" role="status">
+                  Opening the page…
+                </p>
+              }
+            >
+              <Outlet />
+            </Suspense>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    </MotionProvider>
   );
 }
