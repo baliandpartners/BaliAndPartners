@@ -72,7 +72,7 @@ export function MotionToggle() {
       className="motion-preference"
       disabled={!ready}
       aria-pressed={!enabled}
-      aria-label="Reduce visual motion"
+      aria-label={`Motion: ${enabled ? "on" : "reduced"}. Reduce visual motion`}
       onClick={toggle}
     >
       <span className="motion-indicator" aria-hidden="true" />

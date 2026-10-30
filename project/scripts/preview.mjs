@@ -37,6 +37,13 @@ const mime = {
 
 createServer(async (request, response) => {
   if (new URL(request.url, "http://localhost").pathname === "/api/metrics") {
+    if (!process.env.SUPABASE_SECRET_KEY) {
+      response.writeHead(204, {
+        "X-Website-Measurement": "disabled-in-local-preview",
+      });
+      response.end();
+      return;
+    }
     await metricsHandler(request, response);
     return;
   }
